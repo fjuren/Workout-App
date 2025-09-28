@@ -1,0 +1,547 @@
+{
+  "workouts": [
+    {
+      "selections": {
+        "focus": "Upper Body",
+        "type": "Strength",
+        "skill": "Beginner",
+        "intensity": "Low",
+        "duration": "< 30 min"
+      },
+      "workout": {
+        "name": "Beginner Upper Body Strength",
+        "totalTime": "25 minutes",
+        "exercises": [
+          {
+            "name": "Push-ups (knee variation)",
+            "sets": 2,
+            "reps": "8-10",
+            "restTime": "60s"
+          },
+          {
+            "name": "Assisted Pull-ups",
+            "sets": 2,
+            "reps": "5-8",
+            "restTime": "90s"
+          },
+          {
+            "name": "Dumbbell Chest Press",
+            "sets": 2,
+            "reps": "10-12",
+            "restTime": "60s"
+          },
+          {
+            "name": "Seated Row",
+            "sets": 2,
+            "reps": "10-12",
+            "restTime": "60s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Upper Body",
+        "type": "Strength",
+        "skill": "Beginner",
+        "intensity": "Medium",
+        "duration": "30–60 min"
+      },
+      "workout": {
+        "name": "Beginner Upper Body Builder",
+        "totalTime": "40 minutes",
+        "exercises": [
+          {
+            "name": "Bench Press",
+            "sets": 3,
+            "reps": "8-10",
+            "restTime": "90s"
+          },
+          {
+            "name": "Bent-over Row",
+            "sets": 3,
+            "reps": "8-10",
+            "restTime": "90s"
+          },
+          {
+            "name": "Shoulder Press",
+            "sets": 2,
+            "reps": "10-12",
+            "restTime": "60s"
+          },
+          {
+            "name": "Lat Pulldown",
+            "sets": 2,
+            "reps": "10-12",
+            "restTime": "60s"
+          },
+          {
+            "name": "Bicep Curls",
+            "sets": 2,
+            "reps": "12-15",
+            "restTime": "45s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Upper Body",
+        "type": "Powerlifting",
+        "skill": "Advanced",
+        "intensity": "High",
+        "duration": "> 60 min"
+      },
+      "workout": {
+        "name": "Advanced Powerlifting Upper",
+        "totalTime": "75 minutes",
+        "exercises": [
+          {
+            "name": "Competition Bench Press",
+            "sets": 5,
+            "reps": "3-5",
+            "restTime": "3-4 min"
+          },
+          {
+            "name": "Close-Grip Bench Press",
+            "sets": 4,
+            "reps": "6-8",
+            "restTime": "2-3 min"
+          },
+          {
+            "name": "Weighted Pull-ups",
+            "sets": 4,
+            "reps": "5-8",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Barbell Rows",
+            "sets": 4,
+            "reps": "6-8",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Overhead Press",
+            "sets": 3,
+            "reps": "5-8",
+            "restTime": "2 min"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Lower Body",
+        "type": "Bodyweight",
+        "skill": "Beginner",
+        "intensity": "Low",
+        "duration": "< 30 min"
+      },
+      "workout": {
+        "name": "Gentle Lower Body Flow",
+        "totalTime": "20 minutes",
+        "exercises": [
+          {
+            "name": "Bodyweight Squats",
+            "sets": 2,
+            "reps": "10-15",
+            "restTime": "45s"
+          },
+          {
+            "name": "Glute Bridges",
+            "sets": 2,
+            "reps": "12-15",
+            "restTime": "30s"
+          },
+          {
+            "name": "Wall Sit",
+            "sets": 2,
+            "reps": "20-30s hold",
+            "restTime": "45s"
+          },
+          {
+            "name": "Standing Calf Raises",
+            "sets": 2,
+            "reps": "15-20",
+            "restTime": "30s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Lower Body",
+        "type": "Strength",
+        "skill": "Intermediate",
+        "intensity": "High",
+        "duration": "30–60 min"
+      },
+      "workout": {
+        "name": "Intense Lower Body Strength",
+        "totalTime": "50 minutes",
+        "exercises": [
+          {
+            "name": "Back Squats",
+            "sets": 4,
+            "reps": "6-8",
+            "restTime": "2-3 min"
+          },
+          {
+            "name": "Romanian Deadlifts",
+            "sets": 3,
+            "reps": "8-10",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Bulgarian Split Squats",
+            "sets": 3,
+            "reps": "10-12 each leg",
+            "restTime": "90s"
+          },
+          {
+            "name": "Hip Thrusts",
+            "sets": 3,
+            "reps": "10-15",
+            "restTime": "90s"
+          },
+          {
+            "name": "Walking Lunges",
+            "sets": 2,
+            "reps": "20 steps",
+            "restTime": "60s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Full Body",
+        "type": "Bodyweight",
+        "skill": "Intermediate",
+        "intensity": "Medium",
+        "duration": "30–60 min"
+      },
+      "workout": {
+        "name": "Full Body Calisthenics",
+        "totalTime": "45 minutes",
+        "exercises": [
+          {
+            "name": "Burpees",
+            "sets": 3,
+            "reps": "8-12",
+            "restTime": "90s"
+          },
+          {
+            "name": "Push-ups",
+            "sets": 3,
+            "reps": "12-18",
+            "restTime": "60s"
+          },
+          {
+            "name": "Jump Squats",
+            "sets": 3,
+            "reps": "15-20",
+            "restTime": "60s"
+          },
+          {
+            "name": "Pike Push-ups",
+            "sets": 2,
+            "reps": "8-12",
+            "restTime": "60s"
+          },
+          {
+            "name": "Mountain Climbers",
+            "sets": 3,
+            "reps": "20-30",
+            "restTime": "45s"
+          },
+          {
+            "name": "Plank Hold",
+            "sets": 2,
+            "reps": "30-60s hold",
+            "restTime": "60s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Full Body",
+        "type": "Powerlifting",
+        "skill": "Advanced",
+        "intensity": "High",
+        "duration": "> 60 min"
+      },
+      "workout": {
+        "name": "Competition Prep Full Body",
+        "totalTime": "90 minutes",
+        "exercises": [
+          {
+            "name": "Competition Squat",
+            "sets": 5,
+            "reps": "1-3",
+            "restTime": "4-5 min"
+          },
+          {
+            "name": "Competition Bench Press",
+            "sets": 5,
+            "reps": "1-3",
+            "restTime": "4-5 min"
+          },
+          {
+            "name": "Competition Deadlift",
+            "sets": 5,
+            "reps": "1-3",
+            "restTime": "4-5 min"
+          },
+          {
+            "name": "Pause Bench Press",
+            "sets": 3,
+            "reps": "3-5",
+            "restTime": "3 min"
+          },
+          {
+            "name": "Front Squats",
+            "sets": 3,
+            "reps": "5-8",
+            "restTime": "2-3 min"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Upper Body",
+        "type": "Bodyweight",
+        "skill": "Advanced",
+        "intensity": "High",
+        "duration": "30–60 min"
+      },
+      "workout": {
+        "name": "Advanced Calisthenics Upper",
+        "totalTime": "50 minutes",
+        "exercises": [
+          {
+            "name": "One-Arm Push-up Progression",
+            "sets": 4,
+            "reps": "3-6 each arm",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Muscle-ups",
+            "sets": 4,
+            "reps": "3-8",
+            "restTime": "2-3 min"
+          },
+          {
+            "name": "Handstand Push-ups",
+            "sets": 3,
+            "reps": "5-12",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Archer Pull-ups",
+            "sets": 3,
+            "reps": "4-8 each side",
+            "restTime": "90s"
+          },
+          {
+            "name": "Planche Push-up Progression",
+            "sets": 3,
+            "reps": "3-8",
+            "restTime": "90s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Lower Body",
+        "type": "Bodyweight",
+        "skill": "Advanced",
+        "intensity": "Medium",
+        "duration": "< 30 min"
+      },
+      "workout": {
+        "name": "Advanced Lower Body Quick Hit",
+        "totalTime": "28 minutes",
+        "exercises": [
+          {
+            "name": "Pistol Squats",
+            "sets": 3,
+            "reps": "5-10 each leg",
+            "restTime": "90s"
+          },
+          {
+            "name": "Single-Leg Glute Bridges",
+            "sets": 3,
+            "reps": "12-18 each leg",
+            "restTime": "60s"
+          },
+          {
+            "name": "Jump Lunges",
+            "sets": 3,
+            "reps": "10-16 each leg",
+            "restTime": "75s"
+          },
+          {
+            "name": "Shrimp Squats Progression",
+            "sets": 2,
+            "reps": "3-8 each leg",
+            "restTime": "90s"
+          }
+        ]
+      }
+    },
+    {
+      "selections": {
+        "focus": "Full Body",
+        "type": "Strength",
+        "skill": "Beginner",
+        "intensity": "Low",
+        "duration": "30–60 min"
+      },
+      "workout": {
+        "name": "Beginner Full Body Foundation",
+        "totalTime": "35 minutes",
+        "exercises": [
+          {
+            "name": "Goblet Squats",
+            "sets": 2,
+            "reps": "10-15",
+            "restTime": "90s"
+          },
+          {
+            "name": "Chest Press (Machine)",
+            "sets": 2,
+            "reps": "10-12",
+            "restTime": "90s"
+          },
+          {
+            "name": "Assisted Pull-ups",
+            "sets": 2,
+            "reps": "6-10",
+            "restTime": "2 min"
+          },
+          {
+            "name": "Leg Press",
+            "sets": 2,
+            "reps": "12-15",
+            "restTime": "90s"
+          },
+          {
+            "name": "Shoulder Press (Seated)",
+            "sets": 2,
+            "reps": "8-12",
+            "restTime": "60s"
+          },
+          {
+            "name": "Plank Hold",
+            "sets": 2,
+            "reps": "15-30s hold",
+            "restTime": "60s"
+          }
+        ]
+      }
+    }
+  ],
+  "exerciseLibrary": {
+    "upperBodyStrength": [
+      "Bench Press",
+      "Incline Bench Press",
+      "Dumbbell Press",
+      "Shoulder Press",
+      "Bent-over Row",
+      "Lat Pulldown",
+      "Pull-ups",
+      "Chin-ups",
+      "Bicep Curls",
+      "Tricep Dips",
+      "Close-grip Bench Press",
+      "Overhead Press"
+    ],
+    "upperBodyBodyweight": [
+      "Push-ups",
+      "Pull-ups",
+      "Chin-ups",
+      "Dips",
+      "Pike Push-ups",
+      "Handstand Push-ups",
+      "Muscle-ups",
+      "Archer Push-ups",
+      "One-arm Push-ups",
+      "Planche Push-ups"
+    ],
+    "lowerBodyStrength": [
+      "Back Squats",
+      "Front Squats",
+      "Deadlifts",
+      "Romanian Deadlifts",
+      "Leg Press",
+      "Bulgarian Split Squats",
+      "Hip Thrusts",
+      "Lunges",
+      "Calf Raises",
+      "Leg Curls"
+    ],
+    "lowerBodyBodyweight": [
+      "Bodyweight Squats",
+      "Jump Squats",
+      "Lunges",
+      "Pistol Squats",
+      "Glute Bridges",
+      "Single-leg Glute Bridges",
+      "Calf Raises",
+      "Wall Sits",
+      "Step-ups"
+    ],
+    "fullBodyCompound": [
+      "Burpees",
+      "Thrusters",
+      "Clean and Press",
+      "Turkish Get-ups",
+      "Man Makers",
+      "Bear Crawls",
+      "Mountain Climbers",
+      "Squat to Press",
+      "Deadlift to Row"
+    ]
+  },
+  "intensityGuidelines": {
+    "Low": {
+      "restTime": "45-90s",
+      "sets": "2-3",
+      "repsRange": "Higher reps, lighter weight",
+      "rpe": "5-6/10"
+    },
+    "Medium": {
+      "restTime": "60-120s",
+      "sets": "3-4",
+      "repsRange": "Moderate reps, moderate weight",
+      "rpe": "7-8/10"
+    },
+    "High": {
+      "restTime": "90s-4min",
+      "sets": "4-6",
+      "repsRange": "Lower reps, heavier weight",
+      "rpe": "8-10/10"
+    }
+  },
+  "skillLevelGuidelines": {
+    "Beginner": {
+      "experience": "0-6 months",
+      "focus": "Form, basic movements, building base",
+      "complexity": "Simple compound movements"
+    },
+    "Intermediate": {
+      "experience": "6+ months",
+      "focus": "Progressive overload, variation",
+      "complexity": "More complex movements and combinations"
+    },
+    "Advanced": {
+      "experience": "2+ years",
+      "focus": "Specialization, advanced techniques",
+      "complexity": "Complex movements, periodization"
+    }
+  }
+}

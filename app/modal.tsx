@@ -1,17 +1,26 @@
+import { ThemedText } from '@/components/ThemedText';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import { StyleSheet, View } from 'react-native';
 
 export default function ModalScreen() {
+  const theme = useAppTheme();
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
+    <View style={styles.container}>
+      <ThemedText
+        variant="titleLarge"
+        style={{ color: theme.colors.onSurface, marginBottom: 16 }}
+      >
+        Feature coming soon!
+      </ThemedText>
+      <Link
+        href="/workout"
+        dismissTo
+        style={[styles.link, { color: theme.colors.onSurface }]}
+      >
+        Close
       </Link>
-    </ThemedView>
+    </View>
   );
 }
 
