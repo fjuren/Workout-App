@@ -1,9 +1,0 @@
-import { Chip } from 'react-native-paper';
-
-const Chip = () => (
-  <Chip icon="information" onPress={() => console.log('Pressed')}>
-    Example Chip
-  </Chip>
-);
-
-export default Chip;

@@ -48,6 +48,9 @@ const customColors = {
     errorContainer: '#fef2f2',
     onErrorContainer: '#991b1b',
 
+    good: '#16a34a',
+    bad: '#dc2626',
+
     elevation: {
       level0: 'transparent',
       level1: '#121827',
@@ -86,6 +89,9 @@ const customColors = {
     onError: '#ffffff',
     errorContainer: '#fef2f2',
     onErrorContainer: '#991b1b',
+
+    good: '#16a34a',
+    bad: '#dc2626',
   },
 };
 

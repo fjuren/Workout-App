@@ -6,7 +6,7 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Card, Chip } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function WorkoutScreen() {
@@ -80,28 +80,55 @@ export default function WorkoutScreen() {
               Quick workout
             </ThemedText>
             <Card
-              style={[styles.card, { alignItems: 'center' }]}
+              style={styles.card}
               onPress={() => router.push('/workout/do-quick-workout')}
             >
               <Card.Content>
-                <ThemedText
-                  variant="titleMedium"
-                  style={[
-                    styles.themedText,
-                    {
-                      // justifyContent: 'center',
-                      // alignSelf: 'center',
-                      marginBottom: 'auto',
-                      fontWeight: 'bold',
-                    },
-                  ]}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: theme.spacing.sm,
+                  }}
                 >
-                  {quickWorkout.name}
-                </ThemedText>
-                <ThemedText
-                  variant="bodyMedium"
-                  style={{ alignSelf: 'center' }}
-                >
+                  <ThemedText
+                    variant="titleMedium"
+                    style={[
+                      styles.themedText,
+                      {
+                        fontWeight: 'bold',
+                        flex: 1,
+                      },
+                    ]}
+                  >
+                    {quickWorkout.name}
+                  </ThemedText>
+                  {quickWorkout.complete ? (
+                    <Chip
+                      mode="outlined"
+                      textStyle={[
+                        theme.typography.labelMedium,
+                        { color: theme.colors.good },
+                      ]}
+                      style={{ borderColor: theme.colors.good }}
+                    >
+                      Complete
+                    </Chip>
+                  ) : (
+                    <Chip
+                      mode="outlined"
+                      textStyle={[
+                        theme.typography.labelMedium,
+                        { color: theme.colors.bad },
+                      ]}
+                      style={{ borderColor: theme.colors.bad }}
+                    >
+                      To do
+                    </Chip>
+                  )}
+                </View>
+                <ThemedText variant="bodyMedium">
                   {quickWorkout.totalTime}
                 </ThemedText>
               </Card.Content>

@@ -11,6 +11,7 @@
       "workout": {
         "name": "Beginner Upper Body Strength",
         "totalTime": "25 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Push-ups (knee variation)",
@@ -50,6 +51,7 @@
       "workout": {
         "name": "Beginner Upper Body Builder",
         "totalTime": "40 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Bench Press",
@@ -95,6 +97,7 @@
       "workout": {
         "name": "Advanced Powerlifting Upper",
         "totalTime": "75 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Competition Bench Press",
@@ -140,6 +143,7 @@
       "workout": {
         "name": "Gentle Lower Body Flow",
         "totalTime": "20 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Bodyweight Squats",
@@ -179,6 +183,7 @@
       "workout": {
         "name": "Intense Lower Body Strength",
         "totalTime": "50 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Back Squats",
@@ -224,6 +229,7 @@
       "workout": {
         "name": "Full Body Calisthenics",
         "totalTime": "45 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Burpees",
@@ -275,6 +281,7 @@
       "workout": {
         "name": "Competition Prep Full Body",
         "totalTime": "90 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Competition Squat",
@@ -320,6 +327,7 @@
       "workout": {
         "name": "Advanced Calisthenics Upper",
         "totalTime": "50 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "One-Arm Push-up Progression",
@@ -365,6 +373,7 @@
       "workout": {
         "name": "Advanced Lower Body Quick Hit",
         "totalTime": "28 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Pistol Squats",
@@ -404,6 +413,7 @@
       "workout": {
         "name": "Beginner Full Body Foundation",
         "totalTime": "35 minutes",
+        "complete": false,
         "exercises": [
           {
             "name": "Goblet Squats",

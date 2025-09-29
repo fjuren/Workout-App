@@ -23,9 +23,19 @@ const appReducer = (state: any, action: any): any => {
         quickWorkout: null,
       };
 
+    // sets a quick workout as complete
+    case 'COMPLETE_QUICK_WORKOUT':
+      return {
+        ...state,
+        quickWorkout: action.payload.quickWorkout,
+      };
+
     // use to end any request to reset global state
     case 'END_REQUEST':
-      return { ...state, loading: true, error: null };
+      return { ...state, loading: false, error: null };
+
+    case 'ERROR':
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
@@ -63,6 +73,29 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({
       });
       throw new Error();
     }
+    dispatch({ type: 'END_REQUEST' });
+  };
+
+  // sets workout as complete
+  const completeQuickWorkout = () => {
+    dispatch({ type: 'START_REQUEST' });
+
+    try {
+      dispatch({
+        type: 'COMPLETE_QUICK_WORKOUT',
+        payload: {
+          quickWorkout: {
+            ...state.quickWorkout,
+            complete: true,
+          },
+        },
+      });
+    } catch (err) {
+      console.log('completeQuickWorkout error: ', err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      dispatch({ type: 'ERROR', payload: { error: errorMessage } });
+    }
+    dispatch({ type: 'END_REQUEST' });
   };
 
   const value = {
@@ -73,6 +106,7 @@ export const WorkoutProvider: React.FC<{ children: ReactNode }> = ({
 
     // global actions
     getQuickWorkout,
+    completeQuickWorkout,
   };
   return (
     <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>
