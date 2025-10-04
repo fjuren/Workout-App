@@ -1,49 +1,31 @@
 {
-  "name": "workoutapp",
-  "main": "expo-router/entry",
+  "name": "workout-app",
   "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "server",
+    "shared"
+  ],
   "scripts": {
-    "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "lint": "expo lint"
-  },
-  "dependencies": {
-    "@expo/vector-icons": "^15.0.2",
-    "@react-navigation/bottom-tabs": "^7.4.0",
-    "@react-navigation/elements": "^2.6.3",
-    "@react-navigation/native": "^7.1.8",
-    "deepmerge": "^4.3.1",
-    "expo": "~54.0.7",
-    "expo-constants": "~18.0.8",
-    "expo-font": "~14.0.8",
-    "expo-haptics": "~15.0.7",
-    "expo-image": "~3.0.8",
-    "expo-linking": "~8.0.8",
-    "expo-router": "~6.0.4",
-    "expo-splash-screen": "~31.0.10",
-    "expo-status-bar": "~3.0.8",
-    "expo-symbols": "~1.0.7",
-    "expo-system-ui": "~6.0.7",
-    "expo-web-browser": "~15.0.7",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native": "0.81.4",
-    "react-native-gesture-handler": "~2.28.0",
-    "react-native-paper": "^5.14.5",
-    "react-native-reanimated": "~4.1.0",
-    "react-native-safe-area-context": "~5.6.0",
-    "react-native-screens": "~4.16.0",
-    "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.5.1"
+    "dev": "concurrently \"npm run server:dev\" \"npm run mobile:dev\" --names \"server,mobile\" --prefix-colors \"blue,magenta\"",
+    "mobile:dev": "cd mobile && npm run start:dev",
+    "mobile:prod": "cd mobile && npm run start:prod",
+    "mobile:test": "cd mobile && npm test",
+    "server:dev": "cd server && npm run dev",
+    "server:build": "cd server && npm run build",
+    "server:start": "cd server && npm run start",
+    "server:test": "cd server && npm test",
+    "build": "npm run server:build",
+    "test": "concurrently \"npm run server:test\" \"npm run mobile:test\"",
+    "test:server": "cd server && npm test",
+    "test:mobile": "cd mobile && npm test",
+    "lint": "npm run lint:server && npm run lint:mobile",
+    "lint:server": "cd server && npm run lint",
+    "lint:mobile": "cd mobile && npm run lint"
   },
   "devDependencies": {
-    "@types/react": "~19.1.0",
-    "eslint": "^9.25.0",
-    "eslint-config-expo": "~10.0.0",
-    "typescript": "~5.9.2"
-  },
-  "private": true
+    "concurrently": "^8.2.2",
+    "cross-env": "^10.1.0"
+  }
 }

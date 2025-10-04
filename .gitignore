@@ -1,7 +1,8 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-# dependencies
+# Dependencies
 node_modules/
+mobile/node_modules/
+server/node_modules/
+shared/node_modules/
 
 # Expo
 .expo/
@@ -30,14 +31,26 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# Environment files - ignore all
+.env*
+mobile/.env*
+server/.env*
 
-# typescript
+# But keep examples
+!.env.example
+!mobile/.env.example
+!server/.env.example
+
+# Build outputs
+server/dist/
+mobile/dist/
+
+# TypeScript
 *.tsbuildinfo
 
-app-example
-
-# generated native folders
+# Generated native folders
 /ios
 /android
+
+# Other
+app-example
