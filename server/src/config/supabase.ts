@@ -14,12 +14,12 @@ if (!process.env.SUPABASE_URL) {
 }
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
+if (!supabaseUrl || !supabaseSecretKey) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseServiceKey);
+export const supabase = createClient(supabaseUrl, supabaseSecretKey);
 
 console.log(`Running in ${env} mode with Supabase`);
