@@ -40,6 +40,8 @@ export default {
     },
     plugins: [
       'expo-router',
+      'expo-secure-store',
+      'expo-web-browser',
       [
         'expo-splash-screen',
         {
@@ -61,7 +63,7 @@ export default {
       env: process.env.EXPO_PUBLIC_ENV,
       apiUrl: process.env.EXPO_PUBLIC_API_URL,
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
-      supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+      supabasePublishableKey: process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     },
   },
 };
