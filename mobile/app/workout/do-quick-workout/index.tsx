@@ -2,7 +2,7 @@ import MyWorkoutListAccordionGrp from '@/components/ListAccordion';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { AppTheme } from '@/constants/theme';
-import { useWorkoutContext } from '@/context/WorkoutContext';
+import { useWorkoutContext } from '@/context/DoQuickWorkoutContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { router } from 'expo-router';
 import { useMemo } from 'react';

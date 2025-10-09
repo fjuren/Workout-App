@@ -1,7 +1,7 @@
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import type { AppTheme } from '@/constants/theme';
-import { useWorkoutContext } from '@/context/WorkoutContext';
+import { useWorkoutContext } from '@/context/DoQuickWorkoutContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
@@ -53,7 +53,7 @@ export default function WorkoutScreen() {
           <ThemedButton
             mode="outlined"
             variant="outlined"
-            onPress={() => router.push('/modal')}
+            onPress={() => router.push('/workout/workout-plan/step-1')}
             icon="plus"
           >
             Generate Workout Plan

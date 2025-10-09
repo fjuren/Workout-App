@@ -8,7 +8,8 @@ import { PaperProvider } from 'react-native-paper';
 import { SplashScreenController } from '@/components/splash-screen-controller';
 
 import { useAuthContext } from '@/context/AuthContext';
-import { WorkoutProvider } from '@/context/WorkoutContext';
+import { WorkoutProvider } from '@/context/DoQuickWorkoutContext';
+import { MultiStepWorkoutProvider } from '@/context/MultiStepWorkoutContext';
 import AuthProvider from '@/providers/AuthProvider';
 
 export const unstable_settings = {
@@ -39,6 +40,18 @@ function RootNavigator() {
             options={{ title: 'Quick session' }}
           />
           <Stack.Screen
+            name="workout/workout-plan/step-1"
+            options={{ title: 'Workout plan step 1' }}
+          />
+          <Stack.Screen
+            name="workout/workout-plan/step-2"
+            options={{ title: 'Workout plan step 2' }}
+          />
+          <Stack.Screen
+            name="workout/workout-plan/step-3"
+            options={{ title: 'Workout plan step 3' }}
+          />
+          <Stack.Screen
             name="modal"
             options={{ presentation: 'modal', title: 'Modal' }}
           />
@@ -55,15 +68,17 @@ export default function RootLayout() {
 
   return (
     <WorkoutProvider>
-      <PaperProvider theme={theme}>
-        <ThemeProvider value={theme}>
-          <AuthProvider>
-            <SplashScreenController />
-            <RootNavigator />
-            <StatusBar style="auto" />
-          </AuthProvider>
-        </ThemeProvider>
-      </PaperProvider>
+      <MultiStepWorkoutProvider>
+        <PaperProvider theme={theme}>
+          <ThemeProvider value={theme}>
+            <AuthProvider>
+              <SplashScreenController />
+              <RootNavigator />
+              <StatusBar style="auto" />
+            </AuthProvider>
+          </ThemeProvider>
+        </PaperProvider>
+      </MultiStepWorkoutProvider>
     </WorkoutProvider>
   );
 }

@@ -7,7 +7,7 @@ const CustomSegmentedButton = ({
   selectValue,
 }: {
   buttonValues: string[];
-  selectValue: React.Dispatch<React.SetStateAction<String>>;
+  selectValue: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [value, setValue] = React.useState(buttonValues[0]);
   const theme = useAppTheme();

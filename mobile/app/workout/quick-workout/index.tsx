@@ -2,7 +2,8 @@ import CustomSegmentedButton from '@/components/CustomSegmentedButtons';
 import SectionLabel from '@/components/SectionLabel';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
-import { useWorkoutContext } from '@/context/WorkoutContext';
+import { WORKOUT_OPTS } from '@/constants/constants';
+import { useWorkoutContext } from '@/context/DoQuickWorkoutContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -14,27 +15,26 @@ import workoutDB from '../../../assets/data/workoutDB.json';
 export default function WorkoutScreen() {
   const theme = useAppTheme();
 
-  // local state
-  const sessionFocus = ['Upper Body', 'Lower Body', 'Full Body'];
-  const sessionType = ['Strength', 'Bodyweight', 'Powerlifting'];
-  const skillLevels = ['Beginner', 'Intermediate', 'Advanced'];
-  const intensityLevels = ['Low', 'Medium', 'High'];
-  const durationOptions = ['< 30 min', '30–60 min', '> 60 min'];
-
   // global state
   const { getQuickWorkout, loading, error } = useWorkoutContext();
 
   // button value state
-  const [focusValue, setFocusValue] = useState<String>(sessionFocus[0]);
-  const [typeValue, setTypeValue] = useState<String>(sessionType[0]);
-  const [skillValue, setSkillValue] = useState<String>(skillLevels[0]);
-  const [intensityValue, setIntensityValue] = useState<String>(
-    intensityLevels[0]
+  const [focusValue, setFocusValue] = useState<string>(
+    WORKOUT_OPTS.sessionFocus[0]
   );
-  const [durationValue, setDurationValue] = useState<String>(
-    durationOptions[0]
+  const [typeValue, setTypeValue] = useState<string>(
+    WORKOUT_OPTS.sessionType[0]
   );
-  const [allValueSelections, setAllValueSelections] = useState<String[]>([]);
+  const [skillValue, setSkillValue] = useState<string>(
+    WORKOUT_OPTS.skillLevels[0]
+  );
+  const [intensityValue, setIntensityValue] = useState<string>(
+    WORKOUT_OPTS.intensityLevels[0]
+  );
+  const [durationValue, setDurationValue] = useState<string>(
+    WORKOUT_OPTS.durationOptions[0]
+  );
+  const [allValueSelections, setAllValueSelections] = useState<string[]>([]);
 
   // generate workout form submit state
   const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
@@ -132,7 +132,7 @@ export default function WorkoutScreen() {
               <View>
                 <SectionLabel>Focus</SectionLabel>
                 <CustomSegmentedButton
-                  buttonValues={sessionFocus}
+                  buttonValues={WORKOUT_OPTS.sessionFocus}
                   selectValue={setFocusValue}
                 />
               </View>
@@ -140,7 +140,7 @@ export default function WorkoutScreen() {
               <View>
                 <SectionLabel>Type</SectionLabel>
                 <CustomSegmentedButton
-                  buttonValues={sessionType}
+                  buttonValues={WORKOUT_OPTS.sessionType}
                   selectValue={setTypeValue}
                 />
               </View>
@@ -148,7 +148,7 @@ export default function WorkoutScreen() {
               <View>
                 <SectionLabel>Skill</SectionLabel>
                 <CustomSegmentedButton
-                  buttonValues={skillLevels}
+                  buttonValues={WORKOUT_OPTS.skillLevels}
                   selectValue={setSkillValue}
                 />
               </View>
@@ -156,7 +156,7 @@ export default function WorkoutScreen() {
               <View>
                 <SectionLabel>Intensity</SectionLabel>
                 <CustomSegmentedButton
-                  buttonValues={intensityLevels}
+                  buttonValues={WORKOUT_OPTS.intensityLevels}
                   selectValue={setIntensityValue}
                 />
               </View>
@@ -164,7 +164,7 @@ export default function WorkoutScreen() {
               <View>
                 <SectionLabel>Duration</SectionLabel>
                 <CustomSegmentedButton
-                  buttonValues={durationOptions}
+                  buttonValues={WORKOUT_OPTS.durationOptions}
                   selectValue={setDurationValue}
                 />
               </View>
