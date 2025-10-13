@@ -15,11 +15,8 @@ export const passwordValidator = (password: string) => {
   if (!password || password.length === 0) {
     return 'Password cannot be empty.';
   }
-  if (password.length < 6) {
-    return 'Password must be at least 6 characters.';
-  }
   if (password.length < 8) {
-    return 'For better security, use at least 8 characters.';
+    return 'Password must be at least 8 characters.';
   }
   if (!/[A-Z]/.test(password)) {
     return 'Password should contain an uppercase letter.';

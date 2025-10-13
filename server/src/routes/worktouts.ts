@@ -1,6 +1,7 @@
 import express from 'express';
 import { supabase } from '../config/supabase';
 import { authenticate, AuthRequest } from '../middleware/auth';
+import { DatabaseError, ValidationError } from '../types/errors';
 
 const router = express.Router();
 
@@ -13,17 +14,19 @@ router.get('/', authenticate, async (req: AuthRequest, res) => {
       .eq('user_id', req.user.id);
 
     if (error) {
-      return res.status(400).json({ error: error.message });
+      throw new ValidationError(error.message, {'Error details': error})
+      // return res.status(400).json({ error: error.message });
     }
 
     res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+  } catch (error: any) {
+    throw new DatabaseError(error.message, error, {'Error details': error})
+    // res.status(500).json({ error: 'Server error' });
   }
 });
 
 // Create workout
-router.post('/', authenticate, async (req: AuthRequest, res) => {
+router.post('/', authenticate, async (req: AuthRequest, res, next) => {
   try {
     const { name, exercises, totalTime } = req.body;
 
@@ -40,12 +43,19 @@ router.post('/', authenticate, async (req: AuthRequest, res) => {
       .single();
 
     if (error) {
-      return res.status(400).json({ error: error.message });
+      return next(new DatabaseError(
+        'Failed to create workout',
+        error,
+        {
+          code: error.code,
+          details: error.details,
+        }
+      ));
     }
 
     res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+  } catch (error: any) {
+    next(error)
   }
 });
 
@@ -64,12 +74,15 @@ router.patch('/:id/complete', authenticate, async (req: AuthRequest, res) => {
       .single();
 
     if (error) {
-      return res.status(400).json({ error: error.message });
+      throw new ValidationError(error.message, {'Error details': error})
+      // return res.status(400).json({ error: error.message });
     }
 
     res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+  } catch (error: any) {
+      throw new DatabaseError(error.message, error, {'Error details': error})
+
+    // res.status(500).json({ error: 'Server error' });
   }
 });
 

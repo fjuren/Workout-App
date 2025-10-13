@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, ButtonProps } from 'react-native-paper';
 
 interface ThemedButtonProps extends ButtonProps {
-  variant?: 'contained' | 'outlined';
+  variant?: 'contained' | 'outlined' | 'custom';
 }
 
 // IMPORTANT: ensure you give the themedbutton a mode since this is a native paper component with layered on styling. Recall modes from docs: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal'
@@ -30,6 +30,10 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
             fontWeight: 'bold' as const,
           },
         };
+        case 'custom': 
+        return {
+          // custom is open; can style the button however
+        }
       default: // contained
         return {
           style: {

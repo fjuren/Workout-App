@@ -43,10 +43,10 @@ const customColors = {
     onTertiaryContainer: '#fce7f3',
 
     outline: '#1e2532',
-    error: '#dc2626',
-    onError: '#ffffff',
-    errorContainer: '#fef2f2',
-    onErrorContainer: '#991b1b',
+    error: '#ef4444',            
+    onError: '#ffffff',          
+    errorContainer: '#4c1d1d',   
+    onErrorContainer: '#fecaca', 
 
     good: '#16a34a',
     bad: '#dc2626',

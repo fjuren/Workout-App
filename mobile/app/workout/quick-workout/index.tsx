@@ -1,9 +1,10 @@
 import CustomSegmentedButton from '@/components/CustomSegmentedButtons';
+import ErrorDialog from '@/components/ErrorDialog';
 import SectionLabel from '@/components/SectionLabel';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
+import { supabase } from '@/config/supabase';
 import { WORKOUT_OPTS } from '@/constants/constants';
-import { useWorkoutContext } from '@/context/DoQuickWorkoutContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -16,7 +17,11 @@ export default function WorkoutScreen() {
   const theme = useAppTheme();
 
   // global state
-  const { getQuickWorkout, loading, error } = useWorkoutContext();
+  // const { getQuickWorkout, loading, error } = useWorkoutContext();
+
+  // local state
+  const [ error, setError ] = useState(null)
+  // console.log('error state set: ', error)
 
   // button value state
   const [focusValue, setFocusValue] = useState<string>(
@@ -38,12 +43,13 @@ export default function WorkoutScreen() {
 
   // generate workout form submit state
   const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
+  // console.log(generatedWorkout)
 
   // generates a recommended workout per the user selections
   const generateWorkout = () => {
     // setLoading(true)
 
-    const workoutValueSelections: Record<string, String> = {
+    const workoutValueSelections: Record<string, string> = {
       focus: focusValue,
       type: typeValue,
       skill: skillValue,
@@ -77,15 +83,44 @@ export default function WorkoutScreen() {
   };
 
   // accepts the generated workout, and adds the workout to their day
-  const acceptWorkout = () => {
-    try {
-      getQuickWorkout(generatedWorkout);
-      router.push('/(tabs)/workout');
-    } catch (err) {
-      console.log('acceptWorkout error: ', err);
-      throw new Error();
+  const acceptWorkout = async () => {
+  try {
+    // sets context
+    // getQuickWorkout(generatedWorkout);
+
+    const { data, error } = await supabase.auth.getSession()
+    if (error) {
+      console.log('supabase Auth error')
     }
-  };
+
+    const authToken = data.session?.access_token
+    const response = await fetch('http://localhost:3000/api/workouts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authToken}`
+      },
+      body: JSON.stringify(generatedWorkout), // or whatever data you want to send
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw {
+        code: responseData.code,            
+        status: response.status            // recall this is the error number
+      };
+    }
+
+    const quickWorkoutData = await response.json();
+    console.log(quickWorkoutData)
+    
+    // router.push('/(tabs)/workout');
+  } catch (err: any) {
+    console.log('acceptWorkout error: ', err.error);
+    setError(err)
+  }
+};
 
   // adds all values to an array. Used in the chips components after workout is generated
   useEffect(() => {
@@ -260,6 +295,8 @@ export default function WorkoutScreen() {
             soon!
           </ThemedText>
         )}
+
+        { error && <ErrorDialog error={error} /> }
       </SafeAreaView>
     </ScrollView>
   );

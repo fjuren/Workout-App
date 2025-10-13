@@ -3,7 +3,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider, Portal } from 'react-native-paper';
 
 import { SplashScreenController } from '@/components/splash-screen-controller';
 
@@ -72,8 +72,10 @@ export default function RootLayout() {
         <PaperProvider theme={theme}>
           <ThemeProvider value={theme}>
             <AuthProvider>
-              <SplashScreenController />
-              <RootNavigator />
+              <Portal.Host>
+                <SplashScreenController />
+                <RootNavigator />
+              </Portal.Host>
               <StatusBar style="auto" />
             </AuthProvider>
           </ThemeProvider>

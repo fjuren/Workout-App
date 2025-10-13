@@ -1,0 +1,1 @@
+// not needed since this is handled by supabase
