@@ -2,7 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
-import workoutRoutes from './routes/worktouts';
+import workoutRoutes from './routes/workouts';
 import { AppError } from './types/errors';
 
 dotenv.config();

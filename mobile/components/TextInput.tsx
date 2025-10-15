@@ -6,7 +6,7 @@ import { TextInput as Input } from 'react-native-paper';
 
 type Props = React.ComponentProps<typeof Input> & { errorText?: string };
 
-export const TextInput = ({ errorText, ...props }: Props) => {
+export const TextInput = ({ errorText, testID, ...props }: Props) => {
   const theme = useAppTheme();
   const styles = useStyles(theme);
 
@@ -14,6 +14,7 @@ export const TextInput = ({ errorText, ...props }: Props) => {
     <View style={styles.container}>
       <Input
         style={styles.input}
+        testID={testID}
         // selectionColor={theme}
         underlineColor="transparent"
         mode="outlined"

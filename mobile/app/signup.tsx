@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // import Logo from '../components/Logo';
 // import Header from '../components/Header';
-import TextInput from '@/components/TextInput';
+import { TextInput } from '@/components/TextInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { supabase } from '@/config/supabase';
@@ -89,6 +89,7 @@ export default function Signup() {
         <Card.Content>
           <TextInput
             label="Name"
+            testID="Name"
             returnKeyType="next"
             value={name.value}
             onChangeText={(text) => setName({ value: text, error: '' })}
@@ -98,6 +99,7 @@ export default function Signup() {
 
           <TextInput
             label="Email"
+            testID='Email'
             returnKeyType="next"
             value={email.value}
             onChangeText={(text) => setEmail({ value: text, error: '' })}
@@ -111,6 +113,7 @@ export default function Signup() {
 
           <TextInput
             label="Password"
+            testID='Password'
             returnKeyType="done"
             value={password.value}
             onChangeText={(text) => setPassword({ value: text, error: '' })}

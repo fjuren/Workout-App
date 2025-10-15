@@ -35,7 +35,6 @@ yarn-error.*
 .env*
 mobile/.env*
 server/.env*
-
 # But keep examples
 !.env.example
 !mobile/.env.example
@@ -51,6 +50,14 @@ mobile/dist/
 # Generated native folders
 /ios
 /android
+
+# Testing
+coverage/
+mobile/coverage/
+server/coverage/
+*.lcov
+.nyc_output/
+jest-results.json
 
 # Other
 app-example
