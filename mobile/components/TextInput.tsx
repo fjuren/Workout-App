@@ -1,19 +1,31 @@
-import { AppTheme } from '@/constants/theme';
+import { AppTheme, TypographyVariant } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import React, { memo, useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TextInput as Input } from 'react-native-paper';
+import { StyleSheet, Text } from 'react-native';
+import { TextInput as Input, TextInputProps } from 'react-native-paper';
 
-type Props = React.ComponentProps<typeof Input> & { errorText?: string };
+// type Props = React.ComponentProps<typeof Input> & { errorText?: string };
+interface ThemedTextInputProps extends TextInputProps {
+  variant?: TypographyVariant;
+  color?: string;
+  errorText?: string;
+}
 
-export const TextInput = ({ errorText, testID, ...props }: Props) => {
+export const TextInput: React.FC<ThemedTextInputProps> = ({
+  errorText,
+  testID,
+  variant = 'bodyMedium',
+  color,
+  style,
+  ...props
+}) => {
   const theme = useAppTheme();
-  const styles = useStyles(theme);
+  const styles = useStyles(theme, variant, color);
 
   return (
-    <View style={styles.container}>
+    <>
       <Input
-        style={styles.input}
+        style={[styles.input, style]}
         testID={testID}
         // selectionColor={theme}
         underlineColor="transparent"
@@ -21,20 +33,24 @@ export const TextInput = ({ errorText, testID, ...props }: Props) => {
         {...props}
       />
       {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
-    </View>
+    </>
   );
 };
 
-const useStyles = (theme: AppTheme) =>
+const useStyles = (
+  theme: AppTheme,
+  variant: TypographyVariant,
+  color?: string
+) =>
   useMemo(
     () =>
       StyleSheet.create({
-        container: {
-          width: '100%',
-          marginVertical: 12,
-        },
         input: {
-          backgroundColor: theme.colors.surface,
+          ...theme.typography[variant],
+          backgroundColor: theme.colors.surfaceVariant,
+          borderRadius: theme.borderRadius.md,
+          textAlignVertical: 'top',
+          color: color || theme.colors.onSurface,
         },
         error: {
           fontSize: 14,

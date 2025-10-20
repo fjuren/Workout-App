@@ -10,6 +10,7 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+// import TextInput from '@/components/TextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function StepOne() {
@@ -49,7 +50,7 @@ export default function StepOne() {
       trainingDays: selectedDays,
       specialNotes: notes,
     });
-    router.push('/workout/workout-plan/step-2');
+    router.push('/workout/multi-day-workout-plan/step-1');
   };
 
   return (
@@ -138,33 +139,6 @@ export default function StepOne() {
     </View>
   );
 }
-
-const useStepperStyles = (theme: AppTheme) =>
-  useMemo(
-    () =>
-      StyleSheet.create({
-        stepperContainer: {
-          paddingHorizontal: theme.spacing.md,
-          paddingTop: theme.spacing.md,
-          paddingBottom: theme.spacing.sm,
-        },
-        stepperBars: {
-          flexDirection: 'row',
-          gap: theme.spacing.sm,
-          marginBottom: theme.spacing.sm,
-        },
-        stepBar: {
-          flex: 1,
-          height: 4,
-          borderRadius: theme.borderRadius.xs,
-        },
-        stepText: {
-          fontSize: 14,
-          textAlign: 'right',
-        },
-      }),
-    [theme]
-  );
 
 const useStyles = (theme: AppTheme) =>
   useMemo(
