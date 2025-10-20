@@ -1,21 +1,83 @@
+import ErrorDialog from '@/components/ErrorDialog';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
+import { supabase } from '@/config/supabase';
 import type { AppTheme } from '@/constants/theme';
-import { useWorkoutContext } from '@/context/DoQuickWorkoutContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
+import { Workout } from '@/types/workouts';
+import { UserErrorMessages } from '@/utils/errorMessages';
+import { mockQuickWorkouts, useMockData } from '@/utils/mockData';
 import { useRouter } from 'expo-router';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, Chip } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+// Use it like this:
+// setQuickWorkouts(mockQuickWorkouts);
 
 export default function WorkoutScreen() {
   const theme = useAppTheme();
   const styles = useStyles(theme);
   const router = useRouter();
+  const isMockMode = useMockData();
+
+
+   // local state
+  const [ error, setError ] = useState(null)
+  const [ quickWorkouts, setQuickWorkouts ] = useState<Workout[]>([])
   // global state
-  const { quickWorkout } = useWorkoutContext();
-  console.log('workoutpage quickworkout: ', quickWorkout);
+  // const { quickWorkout } = useWorkoutContext();
+  console.log('workoutpage quickworkout: ', quickWorkouts);
+
+  // get quick workout //TODO cache workout data
+  const getWorkoutData = async () => {
+    // gets auth token
+    try { 
+      
+      const { data, error: sessionError } = await supabase.auth.getSession()
+      if (sessionError) {
+        console.log('SessionError: ,', sessionError)
+        throw {
+          code: UserErrorMessages.TOKEN_EXPIRED,
+          status: 401
+        }
+      }
+      
+      const authToken = data.session?.access_token
+
+      const response = await fetch('http://localhost:3000/api/workouts/quick-workouts', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        }
+      })
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw {
+          code: responseData.code,            
+          status: response.status  // recall this is the error number
+        };
+      }
+      console.log('quickworks_DB: ', responseData)
+      setQuickWorkouts(responseData.all_quick_workouts)
+
+     } catch (error: any) {
+        setError(error)
+     }
+  }
+
+  useEffect(() => {
+      if (isMockMode) {
+        setQuickWorkouts(mockQuickWorkouts);
+      } else {
+        getWorkoutData()
+
+      }
+    }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +103,7 @@ export default function WorkoutScreen() {
             labelStyle={{
               color: theme.colors.onPrimary,
             }}
-            onPress={() => router.push('/workout/quick-workout')}
+            onPress={(() => router.push('/workout/quick-workout'))}
           >
             Generate Single Workout
           </ThemedButton>
@@ -53,7 +115,7 @@ export default function WorkoutScreen() {
           <ThemedButton
             mode="outlined"
             variant="outlined"
-            onPress={() => router.push('/workout/workout-plan/step-1')}
+            onPress={() => router.push('/workout/multi-day-workout-plan/step-1')}
             icon="plus"
           >
             Generate Workout Plan
@@ -74,65 +136,82 @@ export default function WorkoutScreen() {
         >
           My workouts
         </ThemedText>
-        {quickWorkout ? (
+        {/* checks if workouts exists */}
+        {quickWorkouts.length > 0 ? (
           <View>
             <ThemedText style={styles.themedText} variant="titleMedium">
-              Quick workout
+              Quick workouts
             </ThemedText>
-            <Card
-              style={styles.card}
-              onPress={() => router.push('/workout/do-quick-workout')}
-            >
-              <Card.Content>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: theme.spacing.sm,
-                  }}
-                >
-                  <ThemedText
-                    variant="titleMedium"
-                    style={[
-                      styles.themedText,
-                      {
-                        fontWeight: 'bold',
-                        flex: 1,
-                      },
-                    ]}
+            {quickWorkouts.map((workout: Workout, index: any) => (
+              <Card
+                key={index}
+                style={styles.card}
+                onPress={() => router.push({
+                  pathname: '/workout/quick-workout-do',
+                  params: { 
+                    workoutId: workout.id,
+                    workoutTitle: workout.title,
+                    workoutType: workout.type
+                  }
+                })}
+              >
+                <Card.Content>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: theme.spacing.sm,
+                    }}
                   >
-                    {quickWorkout.name}
+                    <ThemedText
+                      variant="titleMedium"
+                      style={[
+                        styles.themedText,
+                        {
+                          fontWeight: 'bold',
+                          flex: 1,
+                        },
+                      ]}
+                    >
+                      {workout.title}
+                    </ThemedText>
+                    {workout.status === 'completed' ? (
+                      <Chip
+                        mode="outlined"
+                        textStyle={[
+                          theme.typography.labelMedium,
+                          { color: theme.colors.good },
+                        ]}
+                        style={{ borderColor: theme.colors.good }}
+                      >
+                        Complete
+                      </Chip>
+                    ) : (
+                      <Chip
+                        mode="outlined"
+                        textStyle={[
+                          theme.typography.labelMedium,
+                          { color: theme.colors.bad },
+                        ]}
+                        style={{ borderColor: theme.colors.bad }}
+                      >
+                        To do
+                      </Chip>
+                    )}
+                  </View>
+                  <ThemedText variant="bodyMedium">
+                    {workout.metadata?.total_time}
                   </ThemedText>
-                  {quickWorkout.complete ? (
-                    <Chip
-                      mode="outlined"
-                      textStyle={[
-                        theme.typography.labelMedium,
-                        { color: theme.colors.good },
-                      ]}
-                      style={{ borderColor: theme.colors.good }}
-                    >
-                      Complete
-                    </Chip>
-                  ) : (
-                    <Chip
-                      mode="outlined"
-                      textStyle={[
-                        theme.typography.labelMedium,
-                        { color: theme.colors.bad },
-                      ]}
-                      style={{ borderColor: theme.colors.bad }}
-                    >
-                      To do
-                    </Chip>
-                  )}
-                </View>
-                <ThemedText variant="bodyMedium">
-                  {quickWorkout.totalTime}
-                </ThemedText>
-              </Card.Content>
-            </Card>
+                  {/* <ThemedText variant="bodySmall">
+                    {workout.metadata?.focus}
+                  </ThemedText> */}
+                  {/* <ThemedText variant="bodySmall">
+                    Type: {workout.type}
+                  </ThemedText> */}
+                </Card.Content>
+              </Card>
+        ))}
           </View>
         ) : (
           <Card style={styles.card}>
@@ -144,6 +223,7 @@ export default function WorkoutScreen() {
           </Card>
         )}
       </View>
+      { error && <ErrorDialog error={error} /> }
     </SafeAreaView>
   );
 }

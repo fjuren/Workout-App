@@ -7,8 +7,9 @@ import SignOutButton from '@/components/auth-buttons/sign-out-button';
 import { useAuthContext } from '@/context/AuthContext';
 
 export default function HomeScreen() {
-  const { profile } = useAuthContext();
-  console.log(profile);
+
+const { user, profileSettings } = useAuthContext();  
+// console.log(user);
   const theme = useAppTheme();
   return (
     <SafeAreaView
@@ -24,10 +25,10 @@ export default function HomeScreen() {
         Coming soon!
       </ThemedText>
       <View style={styles.stepContainer}>
-        <ThemedText variant="labelMedium">Username</ThemedText>
-        <ThemedText>{profile?.email}</ThemedText>
-        <ThemedText variant="labelMedium">Full name</ThemedText>
-        <ThemedText>{profile?.full_name}</ThemedText>
+        <ThemedText variant="labelMedium">Email</ThemedText>
+        <ThemedText>{user?.email}</ThemedText>
+        <ThemedText variant="labelMedium">Name</ThemedText>
+        <ThemedText>{user?.name}</ThemedText>
       </View>
       <SignOutButton />
     </SafeAreaView>

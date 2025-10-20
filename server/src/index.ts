@@ -1,9 +1,8 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
-import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
+import { errorHandler } from './middleware/errorHandler';
 import workoutRoutes from './routes/workouts';
-import { AppError } from './types/errors';
 
 dotenv.config();
 
@@ -16,6 +15,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/workouts', workoutRoutes);
+// app.use('/api/ai/plans', aiPlansRoutes)
 
 // Health check
 app.get('/health', (req, res) => {
@@ -23,35 +23,36 @@ app.get('/health', (req, res) => {
 });
 
 // error middleware to handle AppErrors
-app.use((
-  err: unknown,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  console.error('Error:', err);
+// app.use((
+//   err: unknown,
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   console.error('Error:', err);
 
-  if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
-      error: err.message,
-      code: err.code,
-      details: err.details
-    });
-  }
+//   if (err instanceof AppError) {
+//     return res.status(err.statusCode).json({
+//       error: err.message,
+//       code: err.code,
+//       details: err.details
+//     });
+//   }
 
-  if (err instanceof Error) {
-    return res.status(500).json({
-      error: 'Internal server error',
-      message: err.message
-    });
-  }
+//   if (err instanceof Error) {
+//     return res.status(500).json({
+//       error: 'Internal server error',
+//       message: err.message
+//     });
+//   }
 
-  // when none of the pre-handled errors are defined/identifies, this is the 500 fallback
-  res.status(500).json({
-    error: 'Internal server error',
-    message: String(err)
-  });
-});
+//   // when none of the pre-handled errors are defined/identifies, this is the 500 fallback
+//   res.status(500).json({
+//     error: 'Internal server error',
+//     message: String(err)
+//   });
+// });
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

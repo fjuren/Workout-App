@@ -7,7 +7,8 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | undefined | null>();
-  const [profile, setProfile] = useState<any>();
+  const [user, setUser] = useState<any>();
+  const [profileSettings, setProfileSettings] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Fetch the session once, and subscribe to auth state changes
@@ -19,6 +20,8 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         data: { session },
         error,
       } = await supabase.auth.getSession();
+      
+        console.log('DATA FROM PROFILE SUPABASE: ', session)
 
       if (error) {
         console.error('Error fetching session:', error);
@@ -51,16 +54,28 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       setIsLoading(true);
 
       if (session) {
-        const { data } = await supabase
-          .from('profiles')
+        // get data from user table
+        const { data: userData } = await supabase
+          .from('users')
           .select('*')
           .eq('id', session.user.id)
           .single();
+        
+        setUser(userData);
 
-        setProfile(data);
+        // get data from profile settings table (in future, maybe add this to an onboarding flow? For now, I'm just creating it with default values)
+        const { data: settingsData } = await supabase
+          .from('profile_settings')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
+        
+        setProfileSettings(settingsData);
       } else {
-        setProfile(null);
+        setUser(null);
+        setProfileSettings(null);
       }
+      
 
       setIsLoading(false);
     };
@@ -76,7 +91,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       value={{
         session,
         isLoading,
-        profile,
+        profileSettings,
+        user,
+        // hasCompletedOnboarding: profileSettings != null // TODO for when we consider creating an onboarding flow. Out of scope for MVP
         isLoggedIn: session != undefined,
       }}
     >

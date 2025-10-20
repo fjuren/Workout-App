@@ -36,20 +36,24 @@ function RootNavigator() {
         <Stack.Protected guard={isLoggedIn}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="workout/quick-session/index"
-            options={{ title: 'Quick session' }}
+            name="workout/quick-workout/index"
+            options={{ title: 'Quick Workout' }}
           />
           <Stack.Screen
-            name="workout/workout-plan/step-1"
-            options={{ title: 'Workout plan step 1' }}
+            name="workout/quick-workout-do/index"
+            options={{ title: 'Do Quick Workout' }}
           />
           <Stack.Screen
-            name="workout/workout-plan/step-2"
-            options={{ title: 'Workout plan step 2' }}
+            name="workout/multi-day-workout-plan/step-1"
+            options={{ title: 'Workout Plan - Step 1' }}
           />
           <Stack.Screen
-            name="workout/workout-plan/step-3"
-            options={{ title: 'Workout plan step 3' }}
+            name="workout/multi-day-workout-plan/step-2"
+            options={{ title: 'Workout Plan - Step 2' }}
+          />
+          <Stack.Screen
+            name="workout/multi-day-workout-plan/step-3"
+            options={{ title: 'Workout Plan - Step 3' }}
           />
           <Stack.Screen
             name="modal"

@@ -118,7 +118,7 @@ describe('Signup Screen', () => {
         password: 'Password123',
         options: {
           data: {
-            display_name: 'John Doe',
+            name: 'John Doe',
           },
         },
       });
