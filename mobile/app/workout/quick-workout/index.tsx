@@ -5,10 +5,11 @@ import TextInput from '@/components/TextInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
 import { supabase } from '@/config/supabase';
+// TODO update to shared version of WORKOUT_OPTS
 import { WORKOUT_OPTS } from '@/constants/constants';
 import { AppTheme } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { fakeAiApiResponse, useMockData } from '@/utils/mockData';
+import { mockAiApiResponse, useMockData } from '@/utils/mockData';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -57,12 +58,62 @@ export default function WorkoutScreen() {
 
   // generate workout form submit state
   const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
-  // console.log(generatedWorkout)
+  // console.log(aiGeneratedPlan);
+  // console.log(generatedWorkout);
+
+  // calls my single/quick workout session endpoint that fetches openAI's 'responses' api
+  const getAIWorkoutData = async (
+    workoutValueSelections: Record<string, string>,
+    userProfileMetaData: Record<string, string>
+  ) => {
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.log('supabase Auth error');
+      }
+
+      // gets auth token
+      const authToken = data.session?.access_token;
+
+      const response = await fetch(
+        'http://localhost:3000/api/ai-plans/generate-workout/single',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            workoutValueSelections,
+            userProfileMetaData,
+          }),
+        }
+      );
+
+      const responseData = await response.json();
+      // console.log('AI_responseData', responseData);
+
+      if (!response.ok) {
+        // TODO improve error response when server is down (i.e., kill server and see current message)
+        throw {
+          code: responseData.code,
+          status: response.status, // recall this is the error number
+        };
+      }
+
+      // data from openAI response
+      setAiGeneratedPlan(responseData.aiWorkoutPlan);
+      setGeneratedWorkout(responseData.aiWorkoutPlan.plan_json.weeks[0]);
+    } catch (error: any) {
+      setError(error);
+    }
+  };
 
   // generates a recommended workout per the user selections
   const generateWorkout = async () => {
     // setLoading(true)
 
+    // TODO add to validation in utils/validation
     if (notesValue.value.length > 120) {
       setNotesValue({
         ...notesValue,
@@ -80,29 +131,29 @@ export default function WorkoutScreen() {
         duration: durationValue,
         notes: notesValue.value,
       };
-      console.log('workoutValueSelections', workoutValueSelections);
+      // console.log('workoutValueSelections', workoutValueSelections);
 
       // Add more meta data here when db setup done
-      const userProfileMeta: Record<string, string> = {};
-      console.log('userProfileMeta', userProfileMeta);
+      const userProfileMetaData: Record<string, string> = {};
+      // console.log('userProfileMeta', userProfileMetaData);
 
       // Call openAI api to generage the ai plan
-      const openAiReponse = fakeAiApiResponse;
+      const mockAiReponse = mockAiApiResponse;
       // console.log('openAiReponse: ', openAiReponse);
 
       // add response data to setGenerateWorkout local state
 
       if (isMockMode) {
-        setAiGeneratedPlan(openAiReponse);
-        setGeneratedWorkout(openAiReponse.plan_json.weeks[0]); // should give a single day workout
+        setAiGeneratedPlan(mockAiReponse);
+        setGeneratedWorkout(mockAiReponse.plan_json.weeks[0]); // should give a single day workout
       } else {
-        // fetch real api data (IMPORTANT NOTE: each fetch costs money; use 'isMockMode' when testing)
-        // getWorkoutExerciseData()
+        // fetch real api data (IMPORTANT NOTE: each fetch costs money; use 'isMockMode' when testing; rate limiters added)
+        getAIWorkoutData(workoutValueSelections, userProfileMetaData);
       }
 
       // setLoading(false)
     } catch (err: any) {
-      console.log('acceptWorkout error: ', err.error);
+      console.log('generateWorkout error: ', err.error);
       setError(err);
     }
 
@@ -147,51 +198,7 @@ export default function WorkoutScreen() {
       // gets auth token
       const authToken = data.session?.access_token;
 
-      // Save the plan to ai_plans in db with relevant data
-      //   const responseAiPlan = await fetch('http://localhost:3000/api/ai/plans', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       'Authorization': `Bearer ${authToken}`
-      //     },
-      //     body: JSON.stringify(aiGeneratedPlan), // or whatever data you want to send
-      //   });
-
-      //   const responseAiPlanData = await responseAiPlan.json();
-
-      //   if (!responseAiPlan.ok) {
-      //     throw {
-      //       code: responseAiPlanData.code,
-      //       status: responseAiPlan.status
-      //     };
-      //   }
-
-      //   // --------
-
-      //   // save workout to db by posting to /workouts
-      //   const responseWorkout = await fetch('http://localhost:3000/api/workouts', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //       'Authorization': `Bearer ${authToken}`
-      //     },
-      //       body: JSON.stringify({
-      //         week_start: generatedWorkout.week_start,
-      //         sessions: generatedWorkout.sessions,
-      //         ai_plan_id: responseAiPlanData.id // Include the plan ID for tracking
-      // }) // or whatever data you want to send
-      //   });
-
-      //   const responseWorkoutData = await responseWorkout.json();
-
-      //   if (!responseWorkout.ok) {
-      //     throw {
-      //       code: responseWorkoutData.code,
-      //       status: responseWorkout.status  // recall this is the error number
-      //     };
-      //   }
-
-      console.log('DATA SENT TO BE: ', aiGeneratedPlan, generatedWorkout);
+      // console.log('DATA SENT TO BE: ', aiGeneratedPlan, generatedWorkout);
       const response = await fetch(
         'http://localhost:3000/api/workouts/accept-workout',
         {
@@ -414,10 +421,7 @@ export default function WorkoutScreen() {
             </Card.Content>
           </Card>
         ) : (
-          <ThemedText>
-            Sorry, please try a different combination. More combinations coming
-            soon!
-          </ThemedText>
+          <View></View>
         )}
 
         {error && <ErrorDialog error={error} />}

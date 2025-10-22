@@ -2,8 +2,8 @@ export const useMockData = () => {
   return process.env.EXPO_PUBLIC_USE_MOCK_DATA === 'true';
 };
 
-export const fakeAiApiResponse = {
-  id: 'f2c6a0b3-9e48-4d52-9d6e-7b4f4a02c7df',
+export const mockAiApiResponse = {
+  // id: 'f2c6a0b3-9e48-4d52-9d6e-7b4f4a02c7df',
   model: 'gpt-4-turbo',
   input_summary: {
     goal: 'build upper body strength',
