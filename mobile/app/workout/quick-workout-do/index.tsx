@@ -16,77 +16,115 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function DoQuickWorkout() {
   const theme = useAppTheme();
   const styles = useStyles(theme);
-  const isMockMode = useMockData()
+  const isMockMode = useMockData();
   // local state
-  const [ workoutExercises, setWorkoutExercises ] = useState<WorkoutExercise[]>([])
-  const [ error, setError ] = useState(null)
+  const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>(
+    []
+  );
+  const [error, setError] = useState(null);
   // global state
 
   // query params
-  const { workoutId, workoutTitle, workoutType } = useLocalSearchParams<{ workoutId: string, workoutTitle: string, workoutType: string }>()
+  const { workoutId, workoutTitle, workoutType } = useLocalSearchParams<{
+    workoutId: string;
+    workoutTitle: string;
+    workoutType: string;
+  }>();
 
   // get workout exercises
   const getWorkoutExerciseData = async () => {
     try {
       // get auth token
-      const { data, error: sessionError } = await supabase.auth.getSession()
+      const { data, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) {
-        console.log('SessionError: ,', sessionError)
+        console.log('SessionError: ,', sessionError);
         throw {
           code: UserErrorMessages.TOKEN_EXPIRED,
-          status: 401
-        }
+          status: 401,
+        };
       }
 
-      const authToken = data.session?.access_token
+      const authToken = data.session?.access_token;
 
-      const response = await fetch(`http://localhost:3000/api/workouts/quick-workout-exercise?workoutId=${workoutId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+      const response = await fetch(
+        `http://localhost:3000/api/workouts/quick-workout-exercise?workoutId=${workoutId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-      })
+      );
 
       const responseData = await response.json();
 
       if (!response.ok) {
         throw {
-          code: responseData.code,            
-          status: response.status  // recall this is the error number
+          code: responseData.code,
+          status: response.status, // recall this is the error number
         };
       }
 
-      setWorkoutExercises(responseData.workout_exercise)
+      setWorkoutExercises(responseData.workout_exercise);
     } catch (error: any) {
-      setError(error)
+      setError(error);
     }
-  }
+  };
 
-
-  const completeWorkout = () => {
+  const completeWorkout = async () => {
     try {
-      // call api endpoint
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.log('supabase Auth error');
+      }
+
+      // gets auth token
+      const authToken = data.session?.access_token;
+
+      const response = await fetch(
+        'http://localhost:3000/api/workouts/complete-workout',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            workoutId,
+          }),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        // TODO improve error response when server is down (i.e., kill server and see current message)
+        throw {
+          code: responseData.code,
+          status: response.status, // recall this is the error number
+        };
+      }
       router.push('/(tabs)/workout');
     } catch (err) {
-      console.log('do quick workout completeWorkout error: ', err);
-      throw new Error();
+      console.log('Completed workout error: ', err);
+      setError(error);
     }
   };
 
   useEffect(() => {
     if (isMockMode) {
-      let workoutIdExercises: any = []
+      let workoutIdExercises: any = [];
       mockWorkoutExercises.forEach((exercise) => {
         if (exercise['workout_id'] === workoutId) {
-          workoutIdExercises.push(exercise)
+          workoutIdExercises.push(exercise);
         }
-      })
-      setWorkoutExercises(workoutIdExercises)
+      });
+      setWorkoutExercises(workoutIdExercises);
     } else {
-      getWorkoutExerciseData()
+      getWorkoutExerciseData();
     }
-  }, [])
+  }, []);
 
   return (
     <ScrollView style={[styles.container]}>
@@ -108,7 +146,7 @@ export default function DoQuickWorkout() {
           <ThemedButton variant="contained" onPress={completeWorkout}>
             Complete workout!
           </ThemedButton>
-          { error && <ErrorDialog error={error} /> }
+          {error && <ErrorDialog error={error} />}
         </View>
       </SafeAreaView>
     </ScrollView>

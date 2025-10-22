@@ -4,50 +4,53 @@ import { AuthorizationError, ValidationError } from '../types/errors';
 
 // Get all quick (single-day) workouts for authenticated user
 export const quickWorkouts = async (req: AuthRequest, res: any, next: any) => {
-  try { 
+  try {
     const userId = req.user?.id;
 
     if (!userId) {
       return next(new AuthorizationError('User not authorized'));
     }
 
-    const result = await workoutService.quickWorkouts(userId)
+    const result = await workoutService.quickWorkouts(userId);
 
-    res.status(200).json(result)
-   } catch (error) {
-    next(error)
-   }
-}
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Get relevant workout exercise from workout_exercises table
-export const quickWorkoutExercise = async (req: AuthRequest, res: any, next: any) => {
-  try { 
+export const quickWorkoutExercise = async (
+  req: AuthRequest,
+  res: any,
+  next: any
+) => {
+  try {
     const userId = req.user?.id as string;
-    const workoutId = req.query.workoutId as string
-    console.log(workoutId)
+    const workoutId = req.query.workoutId as string;
+    console.log(workoutId);
 
     if (!userId) {
       return next(new AuthorizationError('User not authorized'));
     }
 
     if (!workoutId) {
-      return next(new ValidationError('Workout not found'))
+      return next(new ValidationError('Workout not found'));
     }
 
+    const result = await workoutService.quickWorkoutExercise(userId, workoutId);
 
-    const result = await workoutService.quickWorkoutExercise(userId, workoutId)
-
-    res.status(200).json(result)
-   } catch (error) {
-    next(error)
-   }
-}
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Create workout(s); based on sessions
 export const acceptWorkout = async (req: AuthRequest, res: any, next: any) => {
   try {
     const { aiGeneratedPlan, generatedWorkout } = req.body;
-    
+
     if (!aiGeneratedPlan || !generatedWorkout) {
       return next(new ValidationError('Missing required fields'));
     }
@@ -58,9 +61,42 @@ export const acceptWorkout = async (req: AuthRequest, res: any, next: any) => {
       return next(new AuthorizationError('User not authorized'));
     }
 
-    const result = await workoutService.acceptWorkout(userId, aiGeneratedPlan, generatedWorkout);
+    const result = await workoutService.acceptWorkout(
+      userId,
+      aiGeneratedPlan,
+      generatedWorkout
+    );
 
     res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Mark workout as complete
+export const completeWorkout = async (
+  req: AuthRequest,
+  res: any,
+  next: any
+) => {
+  try {
+    const userId: string = req.user?.id;
+    const { workoutId } = req.body;
+
+    if (!userId) {
+      return next(new AuthorizationError('User not authorized'));
+    }
+
+    if (!workoutId) {
+      return next(new ValidationError("workout doesn't exist"));
+    }
+
+    const result = await workoutService.completeWorkout(workoutId);
+
+    res.status(200).json({
+      message: 'Workout marked as completed',
+      workout: result,
+    });
   } catch (error) {
     next(error);
   }

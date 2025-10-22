@@ -22,62 +22,62 @@ export default function WorkoutScreen() {
   const router = useRouter();
   const isMockMode = useMockData();
 
-
-   // local state
-  const [ error, setError ] = useState(null)
-  const [ quickWorkouts, setQuickWorkouts ] = useState<Workout[]>([])
+  // local state
+  const [error, setError] = useState(null);
+  const [quickWorkouts, setQuickWorkouts] = useState<Workout[]>([]);
   // global state
   // const { quickWorkout } = useWorkoutContext();
-  console.log('workoutpage quickworkout: ', quickWorkouts);
+  // console.log('workoutpage quickworkout: ', quickWorkouts);
 
   // get quick workout //TODO cache workout data
   const getWorkoutData = async () => {
     // gets auth token
-    try { 
-      
-      const { data, error: sessionError } = await supabase.auth.getSession()
+    try {
+      const { data, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) {
-        console.log('SessionError: ,', sessionError)
+        console.log('SessionError: ,', sessionError);
         throw {
           code: UserErrorMessages.TOKEN_EXPIRED,
-          status: 401
-        }
+          status: 401,
+        };
       }
-      
-      const authToken = data.session?.access_token
 
-      const response = await fetch('http://localhost:3000/api/workouts/quick-workouts', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authToken}`
+      const authToken = data.session?.access_token;
+
+      const response = await fetch(
+        'http://localhost:3000/api/workouts/quick-workouts',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-      })
+      );
 
       const responseData = await response.json();
+      console.log(responseData);
 
       if (!response.ok) {
         throw {
-          code: responseData.code,            
-          status: response.status  // recall this is the error number
+          code: responseData.code,
+          status: response.status, // recall this is the error number
         };
       }
-      console.log('quickworks_DB: ', responseData)
-      setQuickWorkouts(responseData.all_quick_workouts)
-
-     } catch (error: any) {
-        setError(error)
-     }
-  }
+      // console.log('quickworks_DB: ', responseData);
+      setQuickWorkouts(responseData.all_quick_workouts);
+    } catch (error: any) {
+      setError(error);
+    }
+  };
 
   useEffect(() => {
-      if (isMockMode) {
-        setQuickWorkouts(mockQuickWorkouts);
-      } else {
-        getWorkoutData()
-
-      }
-    }, []);
+    if (isMockMode) {
+      setQuickWorkouts(mockQuickWorkouts);
+    } else {
+      getWorkoutData();
+    }
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -103,7 +103,7 @@ export default function WorkoutScreen() {
             labelStyle={{
               color: theme.colors.onPrimary,
             }}
-            onPress={(() => router.push('/workout/quick-workout'))}
+            onPress={() => router.push('/workout/quick-workout')}
           >
             Generate Single Workout
           </ThemedButton>
@@ -115,7 +115,9 @@ export default function WorkoutScreen() {
           <ThemedButton
             mode="outlined"
             variant="outlined"
-            onPress={() => router.push('/workout/multi-day-workout-plan/step-1')}
+            onPress={() =>
+              router.push('/workout/multi-day-workout-plan/step-1')
+            }
             icon="plus"
           >
             Generate Workout Plan
@@ -146,14 +148,16 @@ export default function WorkoutScreen() {
               <Card
                 key={index}
                 style={styles.card}
-                onPress={() => router.push({
-                  pathname: '/workout/quick-workout-do',
-                  params: { 
-                    workoutId: workout.id,
-                    workoutTitle: workout.title,
-                    workoutType: workout.type
-                  }
-                })}
+                onPress={() =>
+                  router.push({
+                    pathname: '/workout/quick-workout-do',
+                    params: {
+                      workoutId: workout.id,
+                      workoutTitle: workout.title,
+                      workoutType: workout.type,
+                    },
+                  })
+                }
               >
                 <Card.Content>
                   <View
@@ -211,7 +215,7 @@ export default function WorkoutScreen() {
                   </ThemedText> */}
                 </Card.Content>
               </Card>
-        ))}
+            ))}
           </View>
         ) : (
           <Card style={styles.card}>
@@ -223,7 +227,7 @@ export default function WorkoutScreen() {
           </Card>
         )}
       </View>
-      { error && <ErrorDialog error={error} /> }
+      {error && <ErrorDialog error={error} />}
     </SafeAreaView>
   );
 }

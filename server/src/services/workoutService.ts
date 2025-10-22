@@ -147,3 +147,25 @@ export const acceptWorkout = async (
     // exercises_count: exercisesInserts.length,
   };
 };
+
+// Mark workout as complete
+export const completeWorkout = async (workoutId: string) => {
+  // biz rule validation
+
+  const completedAt = new Date().toISOString();
+
+  // update status field to 'completed' and add 'completed_at' date
+  const { data, error } = await supabase
+    .from('workouts')
+    .update({ status: 'completed', completed_at: completedAt })
+    .eq('id', workoutId)
+    .select()
+    .single();
+
+  if (error) {
+    throw new DatabaseError('Failed to update workout status', error);
+  }
+  console.log(data);
+
+  return data;
+};

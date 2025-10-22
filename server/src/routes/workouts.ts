@@ -17,4 +17,11 @@ router.get(
 // Create workout(s); based on sessions
 router.post('/accept-workout', authenticate, workoutController.acceptWorkout);
 
+// Mark workout as complete
+router.post(
+  '/complete-workout',
+  authenticate,
+  workoutController.completeWorkout
+);
+
 export default router;
