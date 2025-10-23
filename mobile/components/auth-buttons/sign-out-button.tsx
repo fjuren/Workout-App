@@ -13,8 +13,8 @@ async function onSignOutButtonPress() {
 export default function SignOutButton() {
   return (
     <ThemedButton
-      mode="contained"
-      variant="contained"
+      mode="outlined"
+      variant="outlined"
       onPress={onSignOutButtonPress}
     >
       Sign out

@@ -8,8 +8,11 @@ import { supabase } from '@/config/supabase';
 // TODO update to shared version of WORKOUT_OPTS
 import { WORKOUT_OPTS } from '@/constants/constants';
 import { AppTheme } from '@/constants/theme';
+import { useAuthContext } from '@/context/AuthContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
+import { ProfileSettings } from '@/types/user';
 import { mockAiApiResponse, useMockData } from '@/utils/mockData';
+import { ErrorCode } from '@shared/types/errors';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -17,6 +20,8 @@ import { Card, Chip } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function WorkoutScreen() {
+  const { profileSettings } = useAuthContext();
+  console.log('PROFILE SETTINGS: ', profileSettings);
   const theme = useAppTheme();
   const styles = useStyles(theme);
   const isMockMode = useMockData();
@@ -64,7 +69,7 @@ export default function WorkoutScreen() {
   // calls my single/quick workout session endpoint that fetches openAI's 'responses' api
   const getAIWorkoutData = async (
     workoutValueSelections: Record<string, string>,
-    userProfileMetaData: Record<string, string>
+    userProfileMetaData: ProfileSettings
   ) => {
     try {
       const { data, error } = await supabase.auth.getSession();
@@ -133,8 +138,15 @@ export default function WorkoutScreen() {
       };
       // console.log('workoutValueSelections', workoutValueSelections);
 
+      if (!profileSettings) {
+        throw {
+          code: ErrorCode.NOT_FOUND,
+          status: 404,
+        };
+      }
+
       // Add more meta data here when db setup done
-      const userProfileMetaData: Record<string, string> = {};
+      const userProfileMetaData = profileSettings;
       // console.log('userProfileMeta', userProfileMetaData);
 
       // Call openAI api to generage the ai plan

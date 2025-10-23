@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import { errorHandler } from './middleware/errorHandler';
 import aiPlansRoutes from './routes/ai-plans';
+import userRoutes from './routes/user';
 import workoutRoutes from './routes/workouts';
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use(errorHandler);
 
 // Routes
 console.log('🚀 setting up routes');
+app.use('/api/user/', userRoutes);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/ai-plans/generate-workout', aiPlansRoutes);
 

@@ -1,21 +1,30 @@
 import { useAppTheme } from '@/hooks/use-app-theme';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CustomSegmentedButton = ({
   buttonValues,
   selectValue,
+  defaultValue,
 }: {
   buttonValues: string[];
   selectValue: React.Dispatch<React.SetStateAction<string>>;
+  defaultValue?: string;
 }) => {
-  const [value, setValue] = React.useState(buttonValues[0]);
+  const [value, setValue] = React.useState(defaultValue || buttonValues[0]);
   const theme = useAppTheme();
 
   const newValue = (buttonValue: string) => {
     selectValue(buttonValue);
     setValue(buttonValue);
   };
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+      selectValue(defaultValue);
+    }
+  }, [defaultValue, selectValue]);
 
   return (
     <View style={[styles.container]}>

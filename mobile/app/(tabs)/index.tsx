@@ -3,13 +3,11 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import SignOutButton from '@/components/auth-buttons/sign-out-button';
 import { useAuthContext } from '@/context/AuthContext';
 
 export default function HomeScreen() {
-
-const { user, profileSettings } = useAuthContext();  
-// console.log(user);
+  const { user, profileSettings } = useAuthContext();
+  // console.log(user);
   const theme = useAppTheme();
   return (
     <SafeAreaView
@@ -30,7 +28,6 @@ const { user, profileSettings } = useAuthContext();
         <ThemedText variant="labelMedium">Name</ThemedText>
         <ThemedText>{user?.name}</ThemedText>
       </View>
-      <SignOutButton />
     </SafeAreaView>
   );
 }

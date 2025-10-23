@@ -35,7 +35,6 @@ export default function WorkoutScreen() {
     try {
       const { data, error: sessionError } = await supabase.auth.getSession();
       if (sessionError) {
-        console.log('SessionError: ,', sessionError);
         throw {
           code: UserErrorMessages.TOKEN_EXPIRED,
           status: 401,

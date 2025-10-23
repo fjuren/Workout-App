@@ -66,11 +66,11 @@ export const single = async (
   workoutPlan.source_prompt = prompt;
   workoutPlan.version = 1;
   workoutPlan.status = 'final';
-  console.log('WORKOUT PLAN RESPONSE', workoutPlan);
-  console.log(
-    'WORKOUT PLAN RESPONSE PLAN_JSON.Weeks',
-    workoutPlan.plan_json.weeks
-  );
+  // console.log('WORKOUT PLAN RESPONSE', workoutPlan);
+  // console.log(
+  //   'WORKOUT PLAN RESPONSE PLAN_JSON.Weeks',
+  //   workoutPlan.plan_json.weeks
+  // );
   return {
     aiWorkoutPlan: workoutPlan,
   };

@@ -3,13 +3,39 @@
 import { supabase } from '@/config/supabase';
 import { AuthContext } from '@/context/AuthContext';
 import type { Session } from '@supabase/supabase-js';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | undefined | null>();
   const [user, setUser] = useState<any>();
   const [profileSettings, setProfileSettings] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  // Extract profile fetching logic into a reusable function
+  const fetchProfileData = useCallback(async (currentSession: Session) => {
+    const { data: userData } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', currentSession.user.id)
+      .single();
+
+    setUser(userData);
+
+    const { data: settingsData } = await supabase
+      .from('profile_settings')
+      .select('*')
+      .eq('user_id', currentSession.user.id)
+      .single();
+
+    setProfileSettings(settingsData);
+  }, []);
+
+  // Expose a refresh function for components
+  const refreshProfile = useCallback(async () => {
+    if (session) {
+      await fetchProfileData(session);
+    }
+  }, [session, fetchProfileData]);
 
   // Fetch the session once, and subscribe to auth state changes
   useEffect(() => {
@@ -20,8 +46,8 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         data: { session },
         error,
       } = await supabase.auth.getSession();
-      
-        console.log('DATA FROM PROFILE SUPABASE: ', session)
+
+      console.log('DATA FROM PROFILE SUPABASE: ', session);
 
       if (error) {
         console.error('Error fetching session:', error);
@@ -60,7 +86,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           .select('*')
           .eq('id', session.user.id)
           .single();
-        
+
         setUser(userData);
 
         // get data from profile settings table (in future, maybe add this to an onboarding flow? For now, I'm just creating it with default values)
@@ -69,22 +95,18 @@ export default function AuthProvider({ children }: PropsWithChildren) {
           .select('*')
           .eq('user_id', session.user.id)
           .single();
-        
+
         setProfileSettings(settingsData);
       } else {
         setUser(null);
         setProfileSettings(null);
       }
-      
 
       setIsLoading(false);
     };
 
     fetchProfile();
   }, [session]);
-
-  // console.log('isLoggedIn: ', session);
-  // console.log('profile: ', profile);
 
   return (
     <AuthContext.Provider
@@ -95,6 +117,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
         user,
         // hasCompletedOnboarding: profileSettings != null // TODO for when we consider creating an onboarding flow. Out of scope for MVP
         isLoggedIn: session != undefined,
+        refreshProfile,
       }}
     >
       {children}

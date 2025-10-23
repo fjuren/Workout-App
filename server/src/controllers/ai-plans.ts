@@ -10,21 +10,23 @@ export const single = async (req: AuthRequest, res: any, next: any) => {
     if (!userId) {
       return next(new AuthorizationError('User not authorized'));
     }
-    console.log(req.body);
+    // console.log(req.body);
     // get data from FE
     const { workoutValueSelections, userProfileMetaData } = req.body;
+
+    // console.log(userProfileMetaData);
 
     if (
       !workoutValueSelections.focus ||
       !workoutValueSelections.type ||
       !workoutValueSelections.skill ||
       !workoutValueSelections.intensity ||
-      !workoutValueSelections.duration
-      // !userProfileMetaData.userProfileMetaData
+      !workoutValueSelections.duration ||
+      !userProfileMetaData
     ) {
       return next(
         new ValidationError(
-          'Missing required fields: focus, type, skill, intensity, duration, userProfileMetaData'
+          'Missing required fields: focus, type, skill, intensity, duration, or userProfileMetaData'
         )
       );
     }
@@ -43,7 +45,7 @@ export const single = async (req: AuthRequest, res: any, next: any) => {
       workoutValueSelections.intensity,
       workoutValueSelections.duration,
       workoutValueSelections.notes,
-      userProfileMetaData.userProfileMetaData
+      userProfileMetaData
     );
 
     res.status(201).json(result);

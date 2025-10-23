@@ -39,28 +39,30 @@ export const buildSingleDayPrompt = (params: any) => {
     intensity,
     duration,
     notes,
-    userProfileMetaData = {},
+    userProfileMetaData,
     exerciseLibrary,
   } = params;
   const {
     equipment = EQUIPMENT_TYPES,
-    goals = [],
-    constraints = [],
-    max_hr,
+    goals,
+    constraints,
+    // max_hr,
   } = userProfileMetaData;
-  console.log('EXERCISELIBRARY: ', exerciseLibrary);
-
+  // console.log('EXERCISELIBRARY: ', exerciseLibrary);
+  console.log('EQUIPMENT: ', equipment);
   // TODO Update types
   // considers only exercises based on user profile info (ie available equipment) and specified skill level from workout selections
   const availableExercises = exerciseLibrary.filter((ex: any) => {
-    // if no equipment
-    if (equipment.length === 0) {
+    const equipmentKeys = Object.keys(equipment);
+
+    // if no equipment selected, only return bodyweight exercises
+    if (equipmentKeys.length === 0) {
       return ex.equipment.includes('bodyweight');
     }
 
     // checks if user has the required equipment
     const hasEquipment = ex.equipment.some(
-      (eq: any) => equipment.includes(eq) || eq === 'bodyweight'
+      (eq: string) => equipmentKeys.includes(eq) || eq === 'bodyweight'
     );
 
     const matchesLevel =
@@ -80,12 +82,18 @@ export const buildSingleDayPrompt = (params: any) => {
     )
     .join('\n');
 
+  const equipmentKeys = Object.keys(equipment);
+  const equipmentLabels =
+    equipmentKeys.length > 0
+      ? equipmentKeys.map((key) => equipment[key].label || key).join(', ')
+      : 'bodyweight only';
+
   return `Generate a single ${duration}-minute ${type} workout with the following parameters:
 
 Focus: ${focus}
 Skill Level: ${skill}
 Intensity: ${intensity}
-Available Equipment: ${equipment.join(', ') || 'bodyweight only'}
+Available Equipment: ${equipmentLabels}
 
 User Goals: ${goals.join(', ') || 'general fitness'}
 ${
@@ -95,7 +103,7 @@ ${
 }
 ${notes ? `Additional Notes: ${notes}` : ''}
 
-AVAILABLE EXERCISES (you MUST use only these exercises and their exact IDs):
+AVAILABLE EXERCISES (you MUST use only these exercises and their exact IDs, while considering the available or preferred quipment):
 ${exerciseList}
 
 CRITICAL INSTRUCTIONS:
