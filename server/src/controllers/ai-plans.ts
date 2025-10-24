@@ -1,6 +1,6 @@
 import { AuthRequest } from '../middleware/auth';
 import * as aiPlansService from '../services/ai-plans';
-import { AuthorizationError, ValidationError } from '../types/errors';
+import { UnauthorizedError, ValidationError } from '../types/errors';
 
 // Request a single workout from openAI with relevant parameters
 export const single = async (req: AuthRequest, res: any, next: any) => {
@@ -8,7 +8,7 @@ export const single = async (req: AuthRequest, res: any, next: any) => {
     const userId = req.user?.id;
 
     if (!userId) {
-      return next(new AuthorizationError('User not authorized'));
+      return next(new UnauthorizedError('User not authorized'));
     }
     // console.log(req.body);
     // get data from FE

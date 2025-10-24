@@ -50,7 +50,7 @@ const COMMON_GOALS = [
   'General fitness',
 ];
 
-const COMMON_CONSTRAINTS = ['Limited mobility', 'Pregnancy', 'Post-surgery'];
+const COMMON_CONSTRAINTS = ['Limited mobility', 'Pregnancy', 'I hate jumping jacks', 'Travel / little sleep'];
 
 export default function ProfileScreen() {
   const { user, profileSettings, refreshProfile } = useAuthContext();

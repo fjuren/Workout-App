@@ -1,6 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useAuthContext } from '@/context/AuthContext';
@@ -22,12 +22,6 @@ export default function HomeScreen() {
       <ThemedText variant="bodyLarge" style={styles.comingsoon}>
         Coming soon!
       </ThemedText>
-      <View style={styles.stepContainer}>
-        <ThemedText variant="labelMedium">Email</ThemedText>
-        <ThemedText>{user?.email}</ThemedText>
-        <ThemedText variant="labelMedium">Name</ThemedText>
-        <ThemedText>{user?.name}</ThemedText>
-      </View>
     </SafeAreaView>
   );
 }

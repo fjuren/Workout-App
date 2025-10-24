@@ -38,7 +38,7 @@ export const saveProfileSettings = async (userId: string, profileData: any) => {
     {
       onConflict: 'user_id',
     }
-  );
+  )
 
   if (error) {
     console.log(error.details, error.message);

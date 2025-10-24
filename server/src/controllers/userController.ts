@@ -1,6 +1,6 @@
 import { AuthRequest } from '../middleware/auth';
 import * as userService from '../services/userService';
-import { AuthorizationError, ValidationError } from '../types/errors';
+import { UnauthorizedError, ValidationError } from '../types/errors';
 
 // Get user profile settings for authenticated user
 // export const getProfileSettings = async (
@@ -43,7 +43,7 @@ export const saveProfileSettings = async (
     const userId = req.user?.id;
 
     if (!userId) {
-      return next(new AuthorizationError('User not authorized'));
+      return next(new UnauthorizedError('User not authorized'));
     }
 
     const result = await userService.saveProfileSettings(userId, profileData);

@@ -6,7 +6,8 @@ export const quickWorkouts = async (userId: string) => {
   // get all workouts // TODO any rules to limit how many workouts we pull??
   const { data: quickWorkoutData, error: quickWorkoutError } = await supabase
     .from('workouts')
-    .select('*');
+    .select('*')
+    .eq('user_id', userId)
 
   if (quickWorkoutError) {
     throw new DatabaseError(
@@ -71,7 +72,7 @@ export const acceptWorkout = async (
     .single();
 
   if (aiPlanError) {
-    throw new DatabaseError('Failed to add the AI plan to db', aiPlanError);
+    throw new DatabaseError('Failed to add the AI plan to the db', aiPlanError);
   }
 
   // add workout to workouts table

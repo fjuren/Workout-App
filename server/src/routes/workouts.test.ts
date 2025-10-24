@@ -7,6 +7,7 @@ jest.mock('../config/supabase', () => ({
     },
   },
 }));
+
 // auth middleware mock
 jest.mock('../middleware/auth', () => ({
   authenticate: (req: any, res: any, next: any) => {
@@ -18,6 +19,7 @@ jest.mock('../middleware/auth', () => ({
 
 import express from 'express';
 import request from 'supertest';
+import { mockAiApiResponse } from '../../../shared/mockData';
 import { ErrorCode } from '../../../shared/types/errors';
 import { supabase } from '../config/supabase';
 import { AppError } from '../types/errors';
@@ -51,7 +53,7 @@ app.use((err: unknown, req: any, res: any, next: any) => {
   });
 });
 
-describe('GET /api/workouts', () => {
+describe('GET /api/workouts/quick-workouts', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -86,10 +88,9 @@ describe('GET /api/workouts', () => {
       }),
     });
 
-    const response = await request(app).get('/api/workouts');
-
+    const response = await request(app).get('/api/workouts/quick-workouts');    
     expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockWorkouts);
+    expect(response.body).toEqual({all_quick_workouts: mockWorkouts});
   });
 
   it('should throw a database 500 error if supabase returns an error', async () => {
@@ -103,7 +104,7 @@ describe('GET /api/workouts', () => {
       }),
     });
 
-    const response = await request(app).get('/api/workouts');
+    const response = await request(app).get('/api/workouts/quick-workouts');
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
@@ -111,48 +112,51 @@ describe('GET /api/workouts', () => {
         details: {
             original: "error message received"
         },
-        error: "Failed to get workouts"
+        error: 'Failed to fetch user quick workouts',
     });
   })
 
 });
 
-describe('POST /api/workouts', () => {
+  // create constance of the full api resonse and of the single mocked week
+  const mockFullPlan = mockAiApiResponse; 
+  const mockWeek = mockAiApiResponse.plan_json.weeks[0];
+
+  // What the database returns after inserting
+  const mockInsertedWorkout = {
+    id: '1',
+    user_id: 'user-123',
+    ...mockWeek, 
+    created_at: new Date().toISOString(),
+  };
+
+describe('POST /api/workouts/accept-workout', () => {
     beforeEach(() => {
         jest.clearAllMocks()
     })
 
     it('Should create a new workout for an authenticated user', async () => {
 
-    const mockWorkout = {
-        id: '1',
-        user_id: 'user-123',
-        name: 'Leg Day',
-        exercises: ['squats', 'lunges'],
-        total_time: 45,
-        complete: false,
-      };
-
     (supabase.from as jest.Mock).mockReturnValue({
-        insert: jest.fn().mockReturnValue({
-            select: jest.fn().mockReturnValue({
-                single: jest.fn().mockResolvedValue({
-                    data: mockWorkout,
-                    error: null
-                })
-            })
+      insert: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: mockInsertedWorkout,
+            error: null
+          })
         })
-    })
+      })
+    });
 
-    const response = await request(app).post('/api/workouts').send({
-        name: 'Leg Day',
-        exercises: ['squats', 'lunges'],
-        total_time: 45,
-        complete: false,
-    })
+    const response = await request(app)
+      .post('/api/workouts/accept-workout')
+      .send({
+        aiGeneratedPlan: mockFullPlan,
+        generatedWorkout: mockWeek,
+      });
+
 
     expect(response.status).toBe(201);
-    expect(response.body).toEqual(mockWorkout);
 })
 
     it('Should thow a database 500 error if supabase throws an error', async () => {
@@ -168,16 +172,14 @@ describe('POST /api/workouts', () => {
         })
     })
 
-    const response = await request(app).post('/api/workouts').send({
-        name: 'Leg Day',
-        exercises: ['squats', 'lunges'],
-        total_time: 45,
-        complete: false,
+    const response = await request(app).post('/api/workouts/accept-workout').send({
+        aiGeneratedPlan: mockFullPlan,
+        generatedWorkout: mockWeek,
     })
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
-        error: 'Failed to create workout',
+        error: 'Failed to add the AI plan to the db',
         code: ErrorCode.DATABASE_ERROR,
         details: {
             original: "error creating data sorry"
