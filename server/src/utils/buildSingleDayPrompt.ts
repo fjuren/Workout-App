@@ -43,7 +43,7 @@ export const buildSingleDayPrompt = (params: any) => {
     exerciseLibrary,
   } = params;
   const {
-    equipment = EQUIPMENT_TYPES,
+    equipment,
     goals,
     constraints,
     // max_hr,
