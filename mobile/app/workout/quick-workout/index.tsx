@@ -4,12 +4,13 @@ import SectionLabel from '@/components/SectionLabel';
 import TextInput from '@/components/TextInput';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
-import { supabase } from '@/config/supabase';
 // TODO update to shared version of WORKOUT_OPTS
 import { WORKOUT_OPTS } from '@/constants/constants';
 import { AppTheme } from '@/constants/theme';
 import { useAuthContext } from '@/context/AuthContext';
 import { useAppTheme } from '@/hooks/use-app-theme';
+import { aiWorkoutData } from '@/services/aiService';
+import { acceptWorkoutData } from '@/services/workoutService';
 import { ProfileSettings } from '@/types/user';
 import { mockAiApiResponse, useMockData } from '@/utils/mockData';
 import { ErrorCode } from '@shared/types/errors';
@@ -63,8 +64,8 @@ export default function WorkoutScreen() {
 
   // generate workout form submit state
   const [generatedWorkout, setGeneratedWorkout] = useState<any>(null);
-  // console.log(aiGeneratedPlan);
-  // console.log(generatedWorkout);
+  console.log(aiGeneratedPlan);
+  console.log(generatedWorkout);
 
   // calls my single/quick workout session endpoint that fetches openAI's 'responses' api
   const getAIWorkoutData = async (
@@ -72,43 +73,18 @@ export default function WorkoutScreen() {
     userProfileMetaData: ProfileSettings
   ) => {
     try {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.log('supabase Auth error');
-      }
-
-      // gets auth token
-      const authToken = data.session?.access_token;
-
-      const response = await fetch(
-        'http://localhost:3000/api/ai-plans/generate-workout/single',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            workoutValueSelections,
-            userProfileMetaData,
-          }),
-        }
-      );
-
-      const responseData = await response.json();
-      // console.log('AI_responseData', responseData);
-
-      if (!response.ok) {
-        // TODO improve error response when server is down (i.e., kill server and see current message)
-        throw {
-          code: responseData.code,
-          status: response.status, // recall this is the error number
-        };
-      }
+      // posts request and prompts AI for a suggested workout
+      const responseData = await aiWorkoutData({
+        method: 'Post',
+        body: JSON.stringify({
+          workoutValueSelections,
+          userProfileMetaData,
+        }),
+      });
 
       // data from openAI response
-      setAiGeneratedPlan(responseData.aiWorkoutPlan);
-      setGeneratedWorkout(responseData.aiWorkoutPlan.plan_json.weeks[0]);
+      setAiGeneratedPlan(responseData);
+      setGeneratedWorkout(responseData.plan_json.weeks[0]);
     } catch (error: any) {
       setError(error);
     }
@@ -202,39 +178,14 @@ export default function WorkoutScreen() {
       // sets context
       // getQuickWorkout(generatedWorkout);
 
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.log('supabase Auth error');
-      }
-
-      // gets auth token
-      const authToken = data.session?.access_token;
-
-      // console.log('DATA SENT TO BE: ', aiGeneratedPlan, generatedWorkout);
-      const response = await fetch(
-        'http://localhost:3000/api/workouts/accept-workout',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            aiGeneratedPlan,
-            generatedWorkout,
-          }),
-        }
-      );
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        // TODO improve error response when server is down (i.e., kill server and see current message)
-        throw {
-          code: responseData.code,
-          status: response.status, // recall this is the error number
-        };
-      }
+      // call api to accept workout; includes error handling
+      await acceptWorkoutData({
+        method: 'POST',
+        body: JSON.stringify({
+          aiGeneratedPlan,
+          generatedWorkout,
+        }),
+      });
 
       router.push('/(tabs)/workout');
     } catch (err: any) {

@@ -36,20 +36,20 @@ app.use((err: unknown, req: any, res: any, next: any) => {
     return res.status(err.statusCode).json({
       error: err.message,
       code: err.code,
-      details: err.details
+      details: err.details,
     });
   }
-  
+
   if (err instanceof Error) {
     return res.status(500).json({
       error: 'Internal server error',
-      message: err.message
+      message: err.message,
     });
   }
-  
+
   res.status(500).json({
     error: 'Internal server error',
-    message: String(err)
+    message: String(err),
   });
 });
 
@@ -59,7 +59,6 @@ describe('GET /api/workouts/quick-workouts', () => {
   });
 
   it('should return all workouts for authenticated user', async () => {
-
     const mockWorkouts = [
       {
         id: '1',
@@ -88,18 +87,17 @@ describe('GET /api/workouts/quick-workouts', () => {
       }),
     });
 
-    const response = await request(app).get('/api/workouts/quick-workouts');    
+    const response = await request(app).get('/api/workouts/quick-workouts');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({all_quick_workouts: mockWorkouts});
+    expect(response.body).toEqual(mockWorkouts);
   });
 
   it('should throw a database 500 error if supabase returns an error', async () => {
-
     (supabase.from as jest.Mock).mockReturnValue({
       select: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValue({
           data: '',
-          error: {message: 'error message received'},
+          error: { message: 'error message received' },
         }),
       }),
     });
@@ -108,44 +106,42 @@ describe('GET /api/workouts/quick-workouts', () => {
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
-        code: ErrorCode.DATABASE_ERROR,
-        details: {
-            original: "error message received"
-        },
-        error: 'Failed to fetch user quick workouts',
+      code: ErrorCode.DATABASE_ERROR,
+      details: {
+        original: 'error message received',
+      },
+      error: 'Failed to fetch user quick workouts',
     });
-  })
-
+  });
 });
 
-  // create constance of the full api resonse and of the single mocked week
-  const mockFullPlan = mockAiApiResponse; 
-  const mockWeek = mockAiApiResponse.plan_json.weeks[0];
+// create constance of the full api resonse and of the single mocked week
+const mockFullPlan = mockAiApiResponse;
+const mockWeek = mockAiApiResponse.plan_json.weeks[0];
 
-  // What the database returns after inserting
-  const mockInsertedWorkout = {
-    id: '1',
-    user_id: 'user-123',
-    ...mockWeek, 
-    created_at: new Date().toISOString(),
-  };
+// What the database returns after inserting
+const mockInsertedWorkout = {
+  id: '1',
+  user_id: 'user-123',
+  ...mockWeek,
+  created_at: new Date().toISOString(),
+};
 
 describe('POST /api/workouts/accept-workout', () => {
-    beforeEach(() => {
-        jest.clearAllMocks()
-    })
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    it('Should create a new workout for an authenticated user', async () => {
-
+  it('Should create a new workout for an authenticated user', async () => {
     (supabase.from as jest.Mock).mockReturnValue({
       insert: jest.fn().mockReturnValue({
         select: jest.fn().mockReturnValue({
           single: jest.fn().mockResolvedValue({
             data: mockInsertedWorkout,
-            error: null
-          })
-        })
-      })
+            error: null,
+          }),
+        }),
+      }),
     });
 
     const response = await request(app)
@@ -155,35 +151,35 @@ describe('POST /api/workouts/accept-workout', () => {
         generatedWorkout: mockWeek,
       });
 
-
     expect(response.status).toBe(201);
-})
+  });
 
-    it('Should thow a database 500 error if supabase throws an error', async () => {
-
+  it('Should thow a database 500 error if supabase throws an error', async () => {
     (supabase.from as jest.Mock).mockReturnValue({
-        insert: jest.fn().mockReturnValue({
-            select: jest.fn().mockReturnValue({
-                single: jest.fn().mockResolvedValue({
-                    data: null,
-                    error: {message: 'error creating data sorry'}
-                })
-            })
-        })
-    })
+      insert: jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnValue({
+          single: jest.fn().mockResolvedValue({
+            data: null,
+            error: { message: 'error creating data sorry' },
+          }),
+        }),
+      }),
+    });
 
-    const response = await request(app).post('/api/workouts/accept-workout').send({
+    const response = await request(app)
+      .post('/api/workouts/accept-workout')
+      .send({
         aiGeneratedPlan: mockFullPlan,
         generatedWorkout: mockWeek,
-    })
+      });
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({
-        error: 'Failed to add the AI plan to the db',
-        code: ErrorCode.DATABASE_ERROR,
-        details: {
-            original: "error creating data sorry"
-        }
+      error: 'Failed to add the AI plan to the db',
+      code: ErrorCode.DATABASE_ERROR,
+      details: {
+        original: 'error creating data sorry',
+      },
     });
-})
-})
+  });
+});

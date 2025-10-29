@@ -32,7 +32,6 @@ app.use(
     credentials: true,
   })
 );
-app.use(errorHandler);
 
 // Routes
 console.log('🚀 setting up routes');
@@ -44,6 +43,8 @@ app.use('/api/ai-plans/generate-workout', aiPlansRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

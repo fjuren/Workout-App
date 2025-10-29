@@ -1,11 +1,10 @@
 import ErrorDialog from '@/components/ErrorDialog';
 import { ThemedButton } from '@/components/ThemedButton';
 import { ThemedText } from '@/components/ThemedText';
-import { supabase } from '@/config/supabase';
 import type { AppTheme } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
+import { getQuickWorkouts } from '@/services/workoutService';
 import { Workout } from '@/types/workouts';
-import { UserErrorMessages } from '@/utils/errorMessages';
 import { mockQuickWorkouts, useMockData } from '@/utils/mockData';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -33,38 +32,10 @@ export default function WorkoutScreen() {
   const getWorkoutData = async () => {
     // gets auth token
     try {
-      const { data, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) {
-        throw {
-          code: UserErrorMessages.TOKEN_EXPIRED,
-          status: 401,
-        };
-      }
-
-      const authToken = data.session?.access_token;
-
-      const response = await fetch(
-        'http://localhost:3000/api/workouts/quick-workouts',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-
-      const responseData = await response.json();
-      console.log(responseData);
-
-      if (!response.ok) {
-        throw {
-          code: responseData.code,
-          status: response.status, // recall this is the error number
-        };
-      }
+      // call api
+      const responseData = await getQuickWorkouts();
       // console.log('quickworks_DB: ', responseData);
-      setQuickWorkouts(responseData.all_quick_workouts);
+      setQuickWorkouts(responseData);
     } catch (error: any) {
       setError(error);
     }

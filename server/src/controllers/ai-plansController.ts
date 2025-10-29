@@ -1,5 +1,5 @@
 import { AuthRequest } from '../middleware/auth';
-import * as aiPlansService from '../services/ai-plans';
+import * as aiPlansService from '../services/ai-plansService';
 import { UnauthorizedError, ValidationError } from '../types/errors';
 
 // Request a single workout from openAI with relevant parameters

@@ -37,7 +37,8 @@ export const single = async (
   console.log('AI PROMPT: ', prompt);
 
   const response = await client.responses.create({
-    model: 'gpt-5-nano-2025-08-07',
+    // note: moved from gpt-5-nano to 4o-mini due to poorer accuracy from nano while 4o-mini is still relatively cheap. 4o-mini docs: https://platform.openai.com/docs/models/gpt-4o-mini
+    model: 'gpt-4o-mini-2024-07-18',
     instructions: `You are an expert fitness trainer who creates personalized workout plans.
   Generate a comprehensive single-day workout plan based on the user's parameters.
 
@@ -71,7 +72,5 @@ export const single = async (
   //   'WORKOUT PLAN RESPONSE PLAN_JSON.Weeks',
   //   workoutPlan.plan_json.weeks
   // );
-  return {
-    aiWorkoutPlan: workoutPlan,
-  };
+  return workoutPlan;
 };

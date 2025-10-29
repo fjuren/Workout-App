@@ -1,13 +1,14 @@
+import { Workout } from '@shared/index';
 import { supabase } from '../config/supabase';
 import { DatabaseError, ValidationError } from '../types/errors';
 
 // Get all quick (single-day) workouts for authenticated user
-export const quickWorkouts = async (userId: string) => {
+export const quickWorkouts = async (userId: string): Promise<Workout[]> => {
   // get all workouts // TODO any rules to limit how many workouts we pull??
   const { data: quickWorkoutData, error: quickWorkoutError } = await supabase
     .from('workouts')
     .select('*')
-    .eq('user_id', userId)
+    .eq('user_id', userId);
 
   if (quickWorkoutError) {
     throw new DatabaseError(
@@ -15,10 +16,7 @@ export const quickWorkouts = async (userId: string) => {
       quickWorkoutError
     );
   }
-
-  return {
-    all_quick_workouts: quickWorkoutData,
-  };
+  return quickWorkoutData;
 };
 
 // Get relevant workout exercise from workout_exercises table

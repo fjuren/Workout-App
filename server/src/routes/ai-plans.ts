@@ -1,5 +1,5 @@
 import express from 'express';
-import * as aiPlansController from '../controllers/ai-plans';
+import * as aiPlansController from '../controllers/ai-plansController';
 import { authenticate } from '../middleware/auth';
 import { openAiRequestLimiter } from '../middleware/rateLimiters';
 

@@ -35,20 +35,20 @@ app.use((err: unknown, req: any, res: any, next: any) => {
     return res.status(err.statusCode).json({
       error: err.message,
       code: err.code,
-      details: err.details
+      details: err.details,
     });
   }
-  
+
   if (err instanceof Error) {
     return res.status(500).json({
       error: 'Internal server error',
-      message: err.message
+      message: err.message,
     });
   }
-  
+
   res.status(500).json({
     error: 'Internal server error',
-    message: String(err)
+    message: String(err),
   });
 });
 
@@ -66,21 +66,24 @@ describe('POST /api/ai-plans/generate-workout/single', () => {
         skill: 'intermediate',
         intensity: 'moderate',
         duration: 60,
-        notes: 'Focus on upper body'
+        notes: 'Focus on upper body',
       },
       userProfileMetaData: {
         age: 30,
         weight: 180,
-        experience: '2 years'
-      }
+        experience: '2 years',
+      },
     };
 
     const mockResponse = {
       plan_id: 'plan-123',
-      workout: { /* workout data */ }
+      workout: {
+        /* workout data */
+      },
     };
 
-    jest.spyOn(require('../services/ai-plans'), 'single')
+    jest
+      .spyOn(require('../services/ai-plansService'), 'single')
       .mockResolvedValue(mockResponse);
 
     const response = await request(app)
@@ -96,9 +99,9 @@ describe('POST /api/ai-plans/generate-workout/single', () => {
       .post('/api/ai-plans/generate-workout/single')
       .send({
         workoutValueSelections: {
-          focus: 'strength'
+          focus: 'strength',
           // TODO more fields
-        }
+        },
       });
 
     expect(response.status).toBe(400);
@@ -115,9 +118,9 @@ describe('POST /api/ai-plans/generate-workout/single', () => {
           skill: 'intermediate',
           intensity: 'moderate',
           duration: 60,
-          notes: 'a'.repeat(121) // validates up to 120 words to limit length
+          notes: 'a'.repeat(121), // validates up to 120 words to limit length
         },
-        userProfileMetaData: { age: 30 }
+        userProfileMetaData: { age: 30 },
       });
 
     expect(response.status).toBe(400);
@@ -136,9 +139,9 @@ describe('POST /api/ai-plans/generate-workout/single', () => {
           skill: 'intermediate',
           intensity: 'moderate',
           duration: 60,
-          notes: ''
+          notes: '',
         },
-        userProfileMetaData: { age: 30 }
+        userProfileMetaData: { age: 30 },
       });
 
     expect(response.status).toBe(401);
